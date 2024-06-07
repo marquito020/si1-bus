@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppBar, Box, Container, Toolbar, Button as MuiButton } from "@mui/material";
+import { URL_BACKEND } from "../../../constants/routes";
 
 export default function ChoferForm() {
   const [chofer, setChofer] = useState({
@@ -29,7 +29,7 @@ export default function ChoferForm() {
 
     try {
       if (editing) {
-        await fetch(`http://localhost:3700/api/choferes/${params.id}`, {
+        await fetch(`${URL_BACKEND}/choferes/${params.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function ChoferForm() {
           body: JSON.stringify(chofer),
         });
       } else {
-        await fetch("http://localhost:3700/api/choferes", {
+        await fetch(`${URL_BACKEND}/choferes`, {
           method: "POST",
           body: JSON.stringify(chofer),
           headers: {
@@ -55,7 +55,7 @@ export default function ChoferForm() {
   };
 
   const loadChofer = async (id) => {
-    const res = await fetch(`http://localhost:3700/api/choferes/${id}`);
+    const res = await fetch(`${URL_BACKEND}/choferes/${id}`);
     const data = await res.json();
     setChofer({ ci_chofer: data.ci_chofer, licencia: data.licencia, nombre: data.nombre });
     setEditing(true);

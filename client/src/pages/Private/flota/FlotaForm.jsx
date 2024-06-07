@@ -1,6 +1,7 @@
-import { Button, Card, CardContent, CircularProgress, Grid, TextField, Typography } from "@mui/material";
+import { Button, Card, CardContent, CircularProgress, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { URL_BACKEND } from "../../../constants/routes";
 
 export default function FlotaForm() {
   const [flota, setFlota] = useState({
@@ -15,6 +16,23 @@ export default function FlotaForm() {
   });
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+
+  const [tipoFlota, setTipoFlota] = useState([]);
+  const [estadoFlota, setEstadoFlota] = useState([]);
+
+  useEffect(() => {
+    fetch(`${URL_BACKEND}/tipo_flotas`)
+      .then(res => res.json())
+      .then(data => setTipoFlota(data));
+
+    console.log(tipoFlota);
+
+    fetch(`${URL_BACKEND}/estado_flotas`)
+      .then(res => res.json())
+      .then(data => setEstadoFlota(data));
+
+    console.log(estadoFlota);
+  }, []);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -33,7 +51,7 @@ export default function FlotaForm() {
 
     try {
       if (editing) {
-        await fetch(`http://localhost:3700/api/flotas/${params.placa}`, {
+        await fetch(`${URL_BACKEND}/flotas/${params.placa}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -41,7 +59,8 @@ export default function FlotaForm() {
           body: JSON.stringify(flota),
         });
       } else {
-        await fetch("http://localhost:3700/api/flotas", {
+        console.log(flota);
+        await fetch(`${URL_BACKEND}/flotas`, {
           method: "POST",
           body: JSON.stringify(flota),
           headers: {
@@ -59,7 +78,7 @@ export default function FlotaForm() {
   };
 
   const loadFlota = async (placa) => {
-    const res = await fetch(`http://localhost:3700/api/flotas/${placa}`);
+    const res = await fetch(`${URL_BACKEND}/flotas/${placa}`);
     const data = await res.json();
     setFlota({
       placa: data.placa,
@@ -130,27 +149,43 @@ export default function FlotaForm() {
                 InputLabelProps={{ style: { color: "white" } }}
               />
               <TextField
+                select
                 variant="filled"
                 label='Tipo'
                 sx={{ display: 'block', margin: '.5rem 0' }}
-                name="tipo"
+                name="cod_tipo_flota"
                 onChange={handleChange}
-                value={flota.tipo}
+                value={flota.cod_tipo_flota}
                 inputProps={{ style: { color: "white" } }}
+                SelectProps={{ style: { color: "white" } }}
                 InputLabelProps={{ style: { color: "white" } }}
-              />
+              >
+                {tipoFlota.map((tipo) => (
+                  <MenuItem key={tipo.cod} value={tipo.cod}>
+                    {tipo.descripcion}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
+                select
                 variant="filled"
                 label='Estado'
                 sx={{ display: 'block', margin: '.5rem 0' }}
-                name="estado"
+                name="cod_estado_flota"
                 onChange={handleChange}
-                value={flota.estado}
+                value={flota.cod_estado_flota}
                 inputProps={{ style: { color: "white" } }}
+                SelectProps={{ style: { color: "white" } }}
                 InputLabelProps={{ style: { color: "white" } }}
-              />
+              >
+                {estadoFlota.map((estado) => (
+                  <MenuItem key={estado.cod} value={estado.cod}>
+                    {estado.descripcion}
+                  </MenuItem>
+                ))}
+              </TextField>
               <Button variant="contained" color="primary" type="submit"
-                disabled={!flota.placa || !flota.marca || !flota.modelo || !flota.capacidad || !flota.tipo || !flota.estado}
+                disabled={!flota.placa || !flota.marca || !flota.modelo || !flota.capacidad || !flota.cod_tipo_flota || !flota.cod_estado_flota}
               >
                 {loading ? (
                   <CircularProgress color="inherit" size={24} />

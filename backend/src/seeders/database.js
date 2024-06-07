@@ -100,6 +100,121 @@ INSERT INTO Bitacora (ID, Fecha_Hora, Id_Usuario) VALUES
             (2, '2023-02-03 00:00:00', 2);
 `;
 
+const dropTables = `
+DROP TABLE IF EXISTS Bitacora;
+DROP TABLE IF EXISTS Usuario;
+DROP TABLE IF EXISTS Permiso_Rol;
+DROP TABLE IF EXISTS Funcionalidad;
+DROP TABLE IF EXISTS Rol;
+DROP TABLE IF EXISTS Persona;
+`;
+
+const tableChofer = `CREATE TABLE chofer (
+    ci_chofer INTEGER PRIMARY KEY,
+    licencia VARCHAR,
+    nombre VARCHAR(50)
+);
+`;
+
+const tableDepartamento = `CREATE TABLE departamento (
+    cod VARCHAR(10) PRIMARY KEY,
+    nombre VARCHAR(20)
+);
+`;
+
+const tableProvincia = `CREATE TABLE provincia (
+    cod VARCHAR(10) PRIMARY KEY,
+    nombre VARCHAR(40),
+    cod_departamento VARCHAR(10),
+    FOREIGN KEY (cod_departamento) REFERENCES departamento (cod)
+);
+`;
+
+const departamentoSeeder = `
+INSERT INTO departamento (cod, nombre) VALUES
+('SC', 'Santa Cruz'), ('BN', 'Beni'), ('LP', 'La Paz')
+`;
+
+const provinciaSeeder = `
+INSERT INTO provincia (cod, nombre, cod_departamento) VALUES
+('WAR', 'Warnes', 'SC'), ('CER', 'Cercado', 'BN'), ('ARM', 'Aroma', 'LP')
+`;
+
+const tableLugar = `CREATE TABLE lugar (
+    cod VARCHAR(10) NOT NULL,
+    cod_provincia VARCHAR(10) NOT NULL,
+    cod_departamento VARCHAR(10) NOT NULL,
+    direccion VARCHAR(255),
+    PRIMARY KEY (cod_departamento, cod_provincia, cod),
+    UNIQUE (cod_departamento, cod_provincia, cod) -- Añadir la restricción única aquí
+);
+`;
+
+const tableTipoFlota = `CREATE TABLE tipo_flota (
+    cod VARCHAR(8) PRIMARY KEY,
+    descripcion VARCHAR(30)
+);
+`;
+
+const tableEstadoFlota = `CREATE TABLE estado_flota (
+    cod VARCHAR(8) PRIMARY KEY,
+    descripcion VARCHAR(13)
+);
+`;
+
+const tableFlota = `CREATE TABLE flota (
+    placa VARCHAR(7) PRIMARY KEY,
+    marca VARCHAR(20),
+    modelo VARCHAR(20),
+    capacidad INTEGER,
+    cod_tipo_flota VARCHAR(8) REFERENCES tipo_flota(cod),
+    cod_estado_flota VARCHAR(8) REFERENCES estado_flota(cod)
+);
+`;
+
+const tipoFlotaSeeder = `
+INSERT INTO tipo_flota (cod, descripcion) VALUES
+('T001', 'Autobús'),
+('T002', 'Minibús'),
+('T003', 'Furgoneta');
+`;
+
+const estadoFlotaSeeder = `
+INSERT INTO estado_flota (cod, descripcion) VALUES
+('E001', 'Activo'),
+('E002', 'Mantenimiento'),
+('E003', 'Inactivo');
+`;
+
+const flotaSeeder = `
+INSERT INTO flota (placa, marca, modelo, capacidad, cod_tipo_flota, cod_estado_flota) VALUES
+('ABC1234', 'Mercedes-Benz', 'Sprinter', 20, 'T003', 'E001'),
+('DEF5678', 'Toyota', 'Hiace', 15, 'T002', 'E002'),
+('GHI9012', 'Volvo', '7900', 40, 'T001', 'E001');
+`;
+
+const tableViaje = `CREATE TABLE viaje (
+    cod VARCHAR(8) PRIMARY KEY,
+    fecha DATE NOT NULL,
+    hora_Salida TIME NOT NULL,
+    hora_Llegada TIME,
+    precio FLOAT NOT NULL,
+    placa_Flota VARCHAR(7) NOT NULL,
+    cod_Lugar_Destino VARCHAR(10) NOT NULL,
+    cod_Provincia_Destino VARCHAR(10) NOT NULL,
+    cod_Departamento_Destino VARCHAR(10) NOT NULL,
+    cod_Lugar_Origen VARCHAR(10) NOT NULL,
+    cod_Provincia_Origen VARCHAR(10) NOT NULL,
+    cod_Departamento_Origen VARCHAR(10) NOT NULL,
+    FOREIGN KEY (cod_Departamento_Destino, cod_Provincia_Destino, cod_Lugar_Destino) 
+        REFERENCES lugar(cod_departamento, cod_provincia, cod),
+    FOREIGN KEY (cod_Departamento_Origen, cod_Provincia_Origen, cod_Lugar_Origen) 
+        REFERENCES lugar(cod_departamento, cod_provincia, cod),
+    FOREIGN KEY (placa_Flota) 
+        REFERENCES flota(placa)
+);
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -108,4 +223,18 @@ module.exports = {
   permisoRolSeeder,
   usuarioSeeder,
   bitacoraSeeder,
+  dropTables,
+  tableChofer,
+  tableDepartamento,
+  tableProvincia,
+  departamentoSeeder,
+  provinciaSeeder,
+  tableLugar,
+  tableTipoFlota,
+  tableEstadoFlota,
+  tableFlota,
+  tipoFlotaSeeder,
+  estadoFlotaSeeder,
+  flotaSeeder,
+    tableViaje,
 };

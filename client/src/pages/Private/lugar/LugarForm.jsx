@@ -1,6 +1,8 @@
-import { Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, Box } from "@mui/material";
+import { Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, Box, MenuItem } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PrivateRoutes } from "../../../constants/routes";
+import { URL_BACKEND } from "../../../constants/routes";
 
 export default function LugarForm() {
   const [lugar, setLugar] = useState({
@@ -11,6 +13,18 @@ export default function LugarForm() {
   });
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [departamento, setDepartamento] = useState([]);
+  const [provincia, setProvincia] = useState([]);
+
+  useEffect(() => {
+    fetch(`${URL_BACKEND}/departamentos`)
+      .then(res => res.json())
+      .then(data => setDepartamento(data));
+
+    fetch(`${URL_BACKEND}/provincias`)
+      .then(res => res.json())
+      .then(data => setProvincia(data));
+  }, []);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -29,7 +43,7 @@ export default function LugarForm() {
 
     try {
       if (editing) {
-        await fetch(`http://localhost:3700/api/lugares/${params.cod_Departamento}/${params.cod_Provincia}/${params.cod}`, {
+        await fetch(`${URL_BACKEND}/lugares/${params.cod_Departamento}/${params.cod_Provincia}/${params.cod}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -37,7 +51,7 @@ export default function LugarForm() {
           body: JSON.stringify(lugar),
         });
       } else {
-        await fetch("http://localhost:3700/api/lugares", {
+        await fetch(`${URL_BACKEND}/lugares`, {
           method: "POST",
           body: JSON.stringify(lugar),
           headers: {
@@ -47,7 +61,7 @@ export default function LugarForm() {
       }
 
       setLoading(false);
-      navigate("/lugares");
+      navigate(PrivateRoutes.LUGARES);
     } catch (error) {
       console.error("Error submitting form:", error);
       setLoading(false);
@@ -55,11 +69,11 @@ export default function LugarForm() {
   };
 
   const loadLugar = async (cod_Departamento, cod_Provincia, cod) => {
-    const res = await fetch(`http://localhost:3700/api/lugares/${cod_Departamento}/${cod_Provincia}/${cod}`);
+    const res = await fetch(`${URL_BACKEND}/lugares/${cod_Departamento}/${cod_Provincia}/${cod}`);
     const data = await res.json();
     setLugar({
-      cod_Departamento: data.cod_Departamento,
-      cod_Provincia: data.cod_Provincia,
+      cod_departamento: data.cod_Departamento,
+      cod_provincia: data.cod_Provincia,
       cod: data.cod,
       direccion: data.direccion
     });
@@ -67,10 +81,10 @@ export default function LugarForm() {
   };
 
   useEffect(() => {
-    if (params.cod_Departamento && params.cod_Provincia && params.cod) {
-      loadLugar(params.cod_Departamento, params.cod_Provincia, params.cod);
+    if (params.cod_departamento && params.cod_provincia && params.cod) {
+      loadLugar(params.cod_departamento, params.cod_provincia, params.cod);
     }
-  }, [params.cod_Departamento, params.cod_Provincia, params.cod]);
+  }, [params.cod_departamento, params.cod_provincia, params.cod]);
 
   return (
     <Grid container direction="column" alignItems="center" justifyContent="center">
@@ -83,27 +97,43 @@ export default function LugarForm() {
             <form onSubmit={handleSubmit}>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between' }}>
                 <TextField
+                  select
                   variant="filled"
-                  label="Código de Departamento"
+                  label="Departamento"
                   name="cod_Departamento"
                   onChange={handleChange}
                   value={lugar.cod_Departamento}
                   inputProps={{ style: { color: "white" } }}
+                  SelectProps={{ style: { color: "white" } }}
                   InputLabelProps={{ style: { color: "white" } }}
                   fullWidth
                   sx={{ flex: '1 1 45%' }}
-                />
+                >
+                  {departamento.map((dept) => (
+                    <MenuItem key={dept.cod} value={dept.cod}>
+                      {dept.nombre}
+                    </MenuItem>
+                  ))}
+                </TextField>
                 <TextField
+                  select
                   variant="filled"
                   label="Código de Provincia"
                   name="cod_Provincia"
                   onChange={handleChange}
                   value={lugar.cod_Provincia}
                   inputProps={{ style: { color: "white" } }}
+                  SelectProps={{ style: { color: "white" } }}
                   InputLabelProps={{ style: { color: "white" } }}
                   fullWidth
                   sx={{ flex: '1 1 45%' }}
-                />
+                >
+                  {provincia.map((prov) => (
+                    <MenuItem key={prov.cod} value={prov.cod}>
+                      {prov.nombre}
+                    </MenuItem>
+                  ))}
+                </TextField>
                 <TextField
                   variant="filled"
                   label="Código"

@@ -34,12 +34,12 @@
 //           {/* <Route index path="/tasks/list" element={<TasksList />} />
 //           <Route path="/tasks/new" element={<TaskForm />} />
 //           <Route path="/tasks/:id/edit" element={<TaskForm />} /> */}
-         
-           
-  
 
 
-         
+
+
+
+
 
 
 
@@ -49,7 +49,7 @@
 //          < Route path="/choferes/new" element={<ChoferForm />} />
 //           <Route path="/choferes/:id/edit" element={<ChoferForm />} />
 //           <Route path="/choferes/list" element={<ChoferList />} />
-          
+
 
 //         <Route path="/flotas" element={<FlotaList />} />
 //         <Route path="/flotas/new" element={<FlotaForm />} />
@@ -76,54 +76,36 @@
 
 // export default App;
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
-import { Container } from "@mui/material";
-import ChoferForm from './components/ChoferForm';
-import ChoferList from './pages/ChoferList';
-import FlotaForm from './components/FlotaForm';
-import FlotaList from './pages/FlotaList';
-import ViajeForm from "./components/ViajeForm";
-import ViajeList from './pages/ViajeList';
-import LugarForm from "./components/LugarForm";
-import LugarList from "./pages/LugarList";
+/* import { Container } from "@mui/material"; */
+import { Provider } from "react-redux";
+
 import Login from './pages/Login'
+import { store } from "./redux/store";
+import Authenticate from "./guards/Authenticate";
+import { PrivateRoutes } from "./constants/routes";
+import Private from "./pages/Private/Private";
+/* import Navbar from "./components/DefaultLayout"; */
 
 function App() {
   return (
-    <BrowserRouter>
-      <Container>
-        <main className="container mx-auto px-20">
+    <Provider store={store}>
+      <BrowserRouter>
         <Routes>
-          <Route index path="/" element={<Login/>} />
+          <Route index path="/" element={<Login />} />
+          <Route index path="/login" element={<Login />} />
+          <Route element={<Authenticate />}>
+            <Route
+              path={`${PrivateRoutes.PRIVATE}/*`}
+              element={<Private />}
+            />
+          </Route>
         </Routes>
-          <Navbar style={{ width: '50%', margin: 'auto' }} />
-          <Routes>
-            {/* Rutas para choferes */}
-            <Route path="/choferes" element={<ChoferList />} />
-            <Route path="/choferes/new" element={<ChoferForm />} />
-            <Route path="/choferes/:id/edit" element={<ChoferForm />} />
-
-            {/* Rutas para flotas */}
-            <Route path="/flotas" element={<FlotaList />} />
-            <Route path="/flotas/new" element={<FlotaForm />} />
-            <Route path="/flotas/:placa/edit" element={<FlotaForm />} />
-
-            {/* Rutas para viajes */}
-            <Route path="/viajes" element={<ViajeList />} />
-          <Route path="/viajes/new" element={<ViajeForm />} />
-          <Route path="/viajes/:id/edit" element={<ViajeForm />} />
-            {/* Rutas para lugares */}
-            <Route path="/lugar" element={<LugarList />} />
-            <Route path="/lugar/list" element={<LugarList />} />
-            <Route path="/lugar/new" element={<LugarForm />} />
-          </Routes>
-        </main>
-      </Container>
-    </BrowserRouter>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

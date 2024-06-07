@@ -9,6 +9,20 @@ const {
   personSeeder,
   rolSeeder,
   usuarioSeeder,
+  dropTables,
+  tableChofer,
+  tableDepartamento,
+  tableProvincia,
+  departamentoSeeder,
+  provinciaSeeder,
+  tableLugar,
+  tableTipoFlota,
+  tableEstadoFlota,
+  tableFlota,
+  tipoFlotaSeeder,
+  estadoFlotaSeeder,
+  flotaSeeder,
+  tableViaje,
 } = require("./seeders/database");
 
 //postgres://bus_si1_user:QQRPNWgyC7NNfJRIvuK29Cqu4hS1JlWz@dpg-cpg3jkdds78s73b5qid0-a.oregon-postgres.render.com/bus_si1
@@ -24,13 +38,26 @@ const pool = new Pool({
 });
 
 const seeders = [
-  tableSeeder,
-  personSeeder,
-  rolSeeder,
-  funcionalidadSeeder,
-  permisoRolSeeder,
-  usuarioSeeder,
-  bitacoraSeeder,
+  /* tableSeeder, */
+  /* personSeeder, */
+  /* rolSeeder, */
+  /* funcionalidadSeeder, */
+  /* permisoRolSeeder, */
+  /* usuarioSeeder, */
+  /* dropTables, */
+  /* tableChofer, */
+  /* tableDepartamento, */
+  /* tableProvincia, */
+  /* departamentoSeeder, */
+  /* provinciaSeeder, */
+  /* tableLugar, */
+  /* tableTipoFlota, */
+  /* tableEstadoFlota, */
+  /* tableFlota, */
+  /* tipoFlotaSeeder, */
+  /* estadoFlotaSeeder, */
+  /* flotaSeeder, */
+  /* tableViaje, */
 ];
 
 pool.connect((err, client, done) => {

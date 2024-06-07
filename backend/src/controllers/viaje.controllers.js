@@ -326,7 +326,9 @@ const createViaje = async (req, res) => {
 
     console.log("Codigos obtenidos: ", { cod_Lugar_Origen, cod_Lugar_Destino });
 
-    const cod = uuidv4(); // Generar un código único para el viaje
+    const cod = uuidv4().substr(0, 8); // Generar un código único para el viaje
+
+    console.log("Código generado:", cod);
 
     const insertResult = await pool.query(
       "INSERT INTO viaje (cod, fecha, hora_Salida, hora_Llegada, precio, placa_Flota, cod_Lugar_Destino, cod_Provincia_Destino, cod_Departamento_Destino, cod_Lugar_Origen, cod_Provincia_Origen, cod_Departamento_Origen) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *",

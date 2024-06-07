@@ -9,6 +9,10 @@ const lugarRoute = require('./routes/lugar.routes')
 const viajeRoute = require('./routes/viaje.routes')
 const usuarioRoute = require('./routes/usuario.routes')
 const loginRoute = require('./routes/login.routes')
+
+const departamentoRoutes = require ('./routes/departamento.routes');
+const provinciaRoutes = require ("./routes/provincia.routes")
+
 const app=express()
 
 // app.use(cors({
@@ -25,5 +29,9 @@ app.use('/api',lugarRoute)
 app.use('/api',viajeRoute)
 
 app.use('/api',loginRoute)
+app.use('/api',usuarioRoute)
+
+app.use('/api',departamentoRoutes);
+app.use('/api',provinciaRoutes);
 
 module.exports=app;

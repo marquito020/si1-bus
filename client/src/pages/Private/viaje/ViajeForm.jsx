@@ -279,7 +279,7 @@
 import { Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, Box, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { URL_BACKEND } from "../../../constants/routes";
 
 export default function ViajeForm() {
   const [viaje, setViaje] = useState({
@@ -318,7 +318,8 @@ export default function ViajeForm() {
 
     try {
       if (editing) {
-        await fetch(`http://localhost:3700/api/viajes/${params.cod}`, {
+        /* await fetch(`http://localhost:3700/api/viajes/${params.cod}`, { */
+        await fetch(`${URL_BACKEND}/viajes/${params.cod}`, { // Cambiar por esta línea
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -326,12 +327,22 @@ export default function ViajeForm() {
           body: JSON.stringify(viaje),
         });
       } else {
-        await fetch("http://localhost:3700/api/viajes", {
+        console.log("Datos enviados:", viaje);
+        await fetch(`${URL_BACKEND}/viajes`, { // Cambiar por esta línea
           method: "POST",
           body: JSON.stringify(viaje),
           headers: {
             "Content-Type": "application/json",
           },
+        }).then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Error en la petición");
+        }).then((data) => {
+          console.log(data);
+        }).catch((error) => {
+          console.error("Error en la petición:", error);
         });
       }
 
@@ -344,7 +355,7 @@ export default function ViajeForm() {
   };
 
   const loadViaje = async (cod) => {
-    const res = await fetch(`http://localhost:3700/api/viajes/${cod}`);
+    const res = await fetch(`${URL_BACKEND}/viajes/${cod}`);
     const data = await res.json();
     setViaje({
       fecha: data.fecha,
@@ -361,19 +372,20 @@ export default function ViajeForm() {
   };
 
   const loadProvincias = async () => {
-    const res = await fetch('http://localhost:3700/api/provincias');
+    const res = await fetch(`${URL_BACKEND}/provincias`);
     const data = await res.json();
+    console.log(data);
     setProvincias(data);
   };
 
   const loadDepartamentos = async () => {
-    const res = await fetch('http://localhost:3700/api/departamentos');
+    const res = await fetch(`${URL_BACKEND}/departamentos`);
     const data = await res.json();
     setDepartamentos(data);
   };
 
   const loadFlotas = async () => {
-    const res = await fetch('http://localhost:3700/api/flotas');
+    const res = await fetch(`${URL_BACKEND}/flotas`);
     const data = await res.json();
     setFlotas(data);
   };
@@ -461,7 +473,7 @@ export default function ViajeForm() {
                   >
                     {flotas.map((flota) => (
                       <MenuItem key={flota.placa} value={flota.placa} style={{ color: "black" }}>
-                        {flota.placa}
+                        {flota.placa} - {flota.marca} {flota.modelo}
                       </MenuItem>
                     ))}
                   </Select>
@@ -477,7 +489,7 @@ export default function ViajeForm() {
                   >
                     {departamentos.map((departamento) => (
                       <MenuItem key={departamento.cod} value={departamento.cod} style={{ color: "black" }}>
-                        {departamento.nombre}
+                        {departamento.nombre} - {departamento.cod}
                       </MenuItem>
                     ))}
                   </Select>
@@ -493,7 +505,7 @@ export default function ViajeForm() {
                   >
                     {provincias.map((provincia) => (
                       <MenuItem key={provincia.cod} value={provincia.cod} style={{ color: "black" }}>
-                        {provincia.nombre}
+                        {provincia.nombre} - {provincia.cod}
                       </MenuItem>
                     ))}
                   </Select>
