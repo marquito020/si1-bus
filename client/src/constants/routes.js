@@ -36,4 +36,5 @@ export const PrivateRoutes = {
 };
 
 //url backend
-export const URL_BACKEND = "http://localhost:4000/api"
+/* export const URL_BACKEND = "http://localhost:4000/api" */
+export const URL_BACKEND = "https://si1-bus-back.onrender.com/api";
