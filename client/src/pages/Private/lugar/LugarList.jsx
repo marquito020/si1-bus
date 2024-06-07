@@ -12,6 +12,7 @@ export default function LugarList() {
     try {
       const response = await fetch(`${URL_BACKEND}/lugares`);
       const data = await response.json();
+      console.log(data);
       setLugares(data);
     } catch (error) {
       console.error('Error loading lugares:', error);
@@ -82,9 +83,9 @@ export default function LugarList() {
               <Card sx={{ backgroundColor: '#1e272e', color: 'white' }}>
                 <CardContent>
                   <Typography variant="h6">Departamento: {lugar.cod_departamento}</Typography>
-                  <Typography>Nombre Departamento: {lugar.nombre_Departamento}</Typography>
+                  <Typography>Nombre Departamento: {lugar.nombre_departamento}</Typography>
                   <Typography>Provincia: {lugar.cod_provincia}</Typography>
-                  <Typography>Nombre Provincia: {lugar.nombre_Provincia}</Typography>
+                  <Typography>Nombre Provincia: {lugar.nombre_provincia}</Typography>
                   <Typography>Código: {lugar.cod}</Typography>
                   <Typography>Dirección: {lugar.direccion}</Typography>
                   <Box display="flex" justifyContent="flex-end" mt={2}>

@@ -132,12 +132,29 @@ const tableProvincia = `CREATE TABLE provincia (
 
 const departamentoSeeder = `
 INSERT INTO departamento (cod, nombre) VALUES
-('SC', 'Santa Cruz'), ('BN', 'Beni'), ('LP', 'La Paz')
+('DEP001', 'Santa Cruz'),
+('DEP002', 'Beni'),
+('DEP003', 'Pando'),
+('DEP004', 'Chuquisaca'),
+('DEP005', 'Tarija'),
+('DEP006', 'Cochabamba'),
+('DEP007', 'Departamento7'),
+('DEP008', 'Departamento8'),
+('DEP009', 'Departamento9');
 `;
 
 const provinciaSeeder = `
 INSERT INTO provincia (cod, nombre, cod_departamento) VALUES
-('WAR', 'Warnes', 'SC'), ('CER', 'Cercado', 'BN'), ('ARM', 'Aroma', 'LP')
+('PRV001', 'ANDRES IBAÑEZ', 'DEP001'),
+('PRV002', 'SANTA MONICA', 'DEP001'),
+('PRV003', 'COBIJA', 'DEP003'),
+('PRV004', 'HERNANDO SILES', 'DEP004'),
+('PRV005', 'CERCADO', 'DEP005'),
+('PRV006', 'CHAPARE', 'DEP006'),
+('PRV007', 'AROMA', 'DEP007'),
+('PRV008', 'EDUARDO AVAROA', 'DEP008'),
+('PRV009', 'UYUNI', 'DEP009'),
+('PRV010', 'MANUEL MARIA CABALLERO', 'DEP001');
 `;
 
 const tableLugar = `CREATE TABLE lugar (
@@ -174,23 +191,34 @@ const tableFlota = `CREATE TABLE flota (
 
 const tipoFlotaSeeder = `
 INSERT INTO tipo_flota (cod, descripcion) VALUES
-('T001', 'Autobús'),
-('T002', 'Minibús'),
-('T003', 'Furgoneta');
+('TIPF001', 'NORMAL'),
+('TIPF002', 'CONFORT'),
+('TIPF003', 'CAMA');
 `;
 
 const estadoFlotaSeeder = `
 INSERT INTO estado_flota (cod, descripcion) VALUES
-('E001', 'Activo'),
-('E002', 'Mantenimiento'),
-('E003', 'Inactivo');
+('ESTF001', 'ACTIVO'),
+('ESTF002', 'INACTIVO'),
+('ESTF003', 'MANTENIMIENTO');
 `;
 
 const flotaSeeder = `
 INSERT INTO flota (placa, marca, modelo, capacidad, cod_tipo_flota, cod_estado_flota) VALUES
-('ABC1234', 'Mercedes-Benz', 'Sprinter', 20, 'T003', 'E001'),
-('DEF5678', 'Toyota', 'Hiace', 15, 'T002', 'E002'),
-('GHI9012', 'Volvo', '7900', 40, 'T001', 'E001');
+('1111DRR', 'VOLVO', 'BASIC', 40, 'TIPF001', 'ESTF001'),
+('2222DRR', 'VOLVO', 'BASIC', 40, 'TIPF001', 'ESTF001'),
+('3333DRR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001'),
+('4444DRR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001'),
+('5555DRR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001'),
+('6666DRR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001'),
+('7777DRR', 'TOYOTA', 'LEITON', 40, 'TIPF003', 'ESTF001'),
+('8888DRR', 'TOYOTA', 'LEITON', 40, 'TIPF003', 'ESTF001'),
+('9999DRR', 'TOYOTA', 'LEITON', 40, 'TIPF003', 'ESTF001'),
+('1111ADR', 'VOLVO', 'BASIC', 40, 'TIPF001', 'ESTF001'),
+('2222ADR', 'VOLVO', 'BASIC', 40, 'TIPF001', 'ESTF001'),
+('3333ADR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001'),
+('4444ADR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001'),
+('6666ADR', 'NISSAN', 'FRONTIER', 60, 'TIPF002', 'ESTF001');
 `;
 
 const tableViaje = `CREATE TABLE viaje (
@@ -215,6 +243,63 @@ const tableViaje = `CREATE TABLE viaje (
 );
 `;
 
+const lugarSeeder = `
+INSERT INTO lugar (cod_departamento, cod_provincia, cod, direccion) VALUES
+('DEP001', 'PRV001', 'LGR001', '4° ANILLO DOBLE VIA'),
+('DEP001', 'PRV001', 'LGR002', 'CARRETERA COMARAPA'),
+('DEP003', 'PRV003', 'LGR004', 'AV. 9 DE FEBRERO'),
+('DEP006', 'PRV006', 'LGR005', 'AV. OQUENDO Y 9 DE ABRIL'),
+('DEP001', 'PRV002', 'LGR006', 'AV. PANAMERICANA Y CALLE 6'),
+('DEP008', 'PRV008', 'LGR007', 'AV. CIRCUNVALACIÓN ENTRE GREGORIO REYNOLDS Y CAMPO JORDAN'),
+('DEP004', 'PRV004', 'LGR008', 'AV. OSTRIA GUTIERREZ'),
+('DEP005', 'PRV005', 'LGR009', 'GRAL. GÜEMES'),
+('DEP009', 'PRV009', 'LGR003', 'CALLE FICTICIA 123'),
+('DEP009', 'PRV009', 'LGR010', 'CALLE IMAGINARIA 456');
+`;
+
+const choferSeeder = `
+INSERT INTO chofer (ci_chofer, licencia, nombre) VALUES
+(2141647, 'C', 'Juan Perez'),
+(6547894, 'C', 'Luis Martinez'),
+(9854125, 'C', 'Ana Fernandez'),
+(4874410, 'C', 'Maria Rodriguez');
+`;
+
+const dropTablesNew = `
+DROP TABLE IF EXISTS Viaje;
+DROP TABLE IF EXISTS Flota;
+DROP TABLE IF EXISTS Estado_Flota;
+DROP TABLE IF EXISTS Tipo_Flota;
+DROP TABLE IF EXISTS Chofer;
+DROP TABLE IF EXISTS Provincia;
+DROP TABLE IF EXISTS Departamento;
+DROP TABLE IF EXISTS Lugar;
+DROP TABLE IF EXISTS Tipo_Flota;
+`;
+
+const viajeSeeder = `
+INSERT INTO viaje (
+    cod,
+    fecha,
+    hora_salida,
+    precio,
+    placa_flota,
+    cod_lugar_destino,
+    cod_provincia_destino,
+    cod_departamento_destino,
+    cod_lugar_origen,
+    cod_provincia_origen,
+    cod_departamento_origen
+) VALUES
+('VIA001', '2020-03-25', '10:30:00', 180.00, '1111DRR', 'LGR001', 'PRV001', 'DEP001', 'LGR002', 'PRV001', 'DEP001'),
+('VIA002', '2020-09-06', '07:00:00', 190.00, '2222DRR', 'LGR002', 'PRV001', 'DEP001', 'LGR004', 'PRV003', 'DEP003'),
+('VIA003', '2021-10-03', '12:15:00', 250.00, '3333DRR', 'LGR004', 'PRV003', 'DEP003', 'LGR005', 'PRV006', 'DEP006'),
+('VIA004', '2022-06-17', '14:30:00', 100.00, '4444DRR', 'LGR008', 'PRV004', 'DEP004', 'LGR007', 'PRV008', 'DEP008'),
+('VIA005', '2022-02-15', '11:30:00', 250.00, '5555DRR', 'LGR009', 'PRV005', 'DEP005', 'LGR001', 'PRV001', 'DEP001'),
+('VIA006', '2022-05-10', '09:45:00', 200.00, '6666DRR', 'LGR007', 'PRV008', 'DEP008', 'LGR010', 'PRV009', 'DEP009'),
+('VIA007', '2023-01-20', '16:30:00', 180.00, '7777DRR', 'LGR006', 'PRV002', 'DEP001', 'LGR001', 'PRV001', 'DEP001');
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -236,5 +321,9 @@ module.exports = {
   tipoFlotaSeeder,
   estadoFlotaSeeder,
   flotaSeeder,
-    tableViaje,
+  tableViaje,
+  dropTablesNew,
+  lugarSeeder,
+  choferSeeder,
+  viajeSeeder,
 };
