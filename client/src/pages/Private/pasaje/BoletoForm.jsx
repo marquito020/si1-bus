@@ -19,6 +19,7 @@ export default function BoletoForm() {
 
     const [loading, setLoading] = useState(false);
     const [loadingBoleto, setLoadingBoleto] = useState(false);
+    const [loadingAsientos, setLoadingAsientos] = useState(false);
     const [error, setError] = useState(null);
     const [viaje, setViaje] = useState([]);
     const [cliente, setCliente] = useState([]);
@@ -34,25 +35,27 @@ export default function BoletoForm() {
         });
     }
 
-    const handleSelectChange = (e) => {
+    const handleSelectChange = async (e) => {
+        setLoadingAsientos(true);
         console.log(e.target.value);
         setBoleto({
             ...boleto,
             cod_viaje: e.target.value,
         });
-        fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}`)
+        await fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}`)
             .then(res => res.json())
             .then(data => {
                 console.log(data);
                 setAsiento(data);
             });
 
-        fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}/boleto`)
+        await fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}/boleto`)
             .then(res => res.json())
             .then(data => {
                 console.log(data);
                 setAsientosOcupados(data);
             });
+        setLoadingAsientos(false);
     }
 
     const handleSubmit = async (e) => {
@@ -70,7 +73,8 @@ export default function BoletoForm() {
             const data = await response.json();
             console.log(data);
             if (response.status === 201) {
-                navigate("/boletos");
+                const notaVenta = data.nota_venta;
+                navigate("/notas-venta/" + notaVenta.id);
             } else {
                 setError(data.message);
             }
@@ -114,7 +118,7 @@ export default function BoletoForm() {
     }, []);
 
     useEffect(() => {
-        fetch(`${URL_BACKEND}/metodos_pago`)
+        fetch(`${URL_BACKEND}/metodos-pago`)
             .then(res => res.json())
             .then(data => {
                 console.log(data);
@@ -147,7 +151,7 @@ export default function BoletoForm() {
                         {cod ? "Editar" : "Nuevo"} Boleto
                     </Typography>
                     {error && <Typography color="error">{error}</Typography>}
-                    {loadingBoleto ? (
+                    {loadingBoleto || loading ? (
                         <CircularProgress />
                     ) : (
                         <form onSubmit={handleSubmit}>
@@ -209,84 +213,86 @@ export default function BoletoForm() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Grid container spacing={2}>
-                                {/* Window on the left side */}
-                                <Grid item xs={1}>
-                                    <Typography variant="subtitle1" align="center">
-                                        Ventanilla
-                                    </Typography>
-                                </Grid>
+                            {loadingAsientos ? <CircularProgress /> : (
+                                <Grid container spacing={2}>
+                                    {/* Window on the left side */}
+                                    <Grid item xs={1}>
+                                        <Typography variant="subtitle1" align="center">
+                                            Ventanilla
+                                        </Typography>
+                                    </Grid>
 
-                                {/* First Column */}
-                                <Grid item xs={3}>
-                                    {asientos.filter((_, index) => index % 3 === 0).map((asiento, index) => (
-                                        <Box
-                                            key={index}
-                                            /* onClick={() => toggleSeatSelection(asiento.id)} */
-                                            onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
-                                                toggleSeatSelection(asiento.id)}
-                                            sx={{
-                                                border: "1px solid gray",
-                                                borderRadius: "4px",
-                                                padding: "16px",
-                                                textAlign: "center",
-                                                marginBottom: "32px",
-                                                boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                                                backgroundColor: selectedSeats.includes(asiento.id) ? "lightblue" : "white",
-                                                cursor: "pointer"
-                                            }}
-                                        >
-                                            <Typography variant="h6">Asiento {asiento.numero}</Typography>
-                                            <Typography variant="body1">{
-                                                asientosOcupados.find((a) => a.id === asiento.id)
-                                                    ? "Ocupado"
-                                                    : "Disponible"
-                                            }</Typography>
-                                        </Box>
-                                    ))}
-                                </Grid>
-
-                                {/* Aisle */}
-                                <Grid item xs={1} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                                    <Box sx={{ height: "100%", textAlign: "center", padding: "16px" }}>
-                                        <Typography variant="h6">Pasillo</Typography>
-                                    </Box>
-                                </Grid>
-
-                                {/* Second and Third Columns */}
-                                <Grid item xs={6}>
-                                    <Grid container spacing={2}>
-                                        {asientos.filter((_, index) => index % 3 !== 0).map((asiento, index) => (
-                                            <Grid item xs={6} key={index}>
-                                                <Box
-                                                    onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
-                                                        toggleSeatSelection(asiento.id)}
-                                                    sx={{
-                                                        border: "1px solid gray",
-                                                        borderRadius: "4px",
-                                                        padding: "16px",
-                                                        textAlign: "center",
-                                                        marginBottom: "16px",
-                                                        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                                                        backgroundColor: selectedSeats.includes(asiento.id) ? "lightblue" : "white",
-                                                        cursor: "pointer"
-                                                    }}
-                                                >
-                                                    <Typography variant="h6">Asiento {asiento.numero}</Typography>
-                                                    <Typography variant="body1">{asientosOcupados.find((a) => a.id === asiento.id) ? "Ocupado" : "Disponible"}</Typography>
-                                                </Box>
-                                            </Grid>
+                                    {/* First Column */}
+                                    <Grid item xs={3}>
+                                        {asientos.filter((_, index) => index % 3 === 0).map((asiento, index) => (
+                                            <Box
+                                                key={index}
+                                                /* onClick={() => toggleSeatSelection(asiento.id)} */
+                                                onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
+                                                    toggleSeatSelection(asiento.id)}
+                                                sx={{
+                                                    border: "1px solid gray",
+                                                    borderRadius: "4px",
+                                                    padding: "16px",
+                                                    textAlign: "center",
+                                                    marginBottom: "32px",
+                                                    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                                                    backgroundColor: selectedSeats.includes(asiento.id) ? "lightblue" : "white",
+                                                    cursor: "pointer"
+                                                }}
+                                            >
+                                                <Typography variant="h6">Asiento {asiento.numero}</Typography>
+                                                <Typography variant="body1">{
+                                                    asientosOcupados.find((a) => a.id === asiento.id)
+                                                        ? "Ocupado"
+                                                        : "Disponible"
+                                                }</Typography>
+                                            </Box>
                                         ))}
                                     </Grid>
-                                </Grid>
 
-                                {/* Window on the right side */}
-                                <Grid item xs={1}>
-                                    <Typography variant="subtitle1" align="center">
-                                        Ventanilla
-                                    </Typography>
+                                    {/* Aisle */}
+                                    <Grid item xs={1} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                                        <Box sx={{ height: "100%", textAlign: "center", padding: "16px" }}>
+                                            <Typography variant="h6">Pasillo</Typography>
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Second and Third Columns */}
+                                    <Grid item xs={6}>
+                                        <Grid container spacing={2}>
+                                            {asientos.filter((_, index) => index % 3 !== 0).map((asiento, index) => (
+                                                <Grid item xs={6} key={index}>
+                                                    <Box
+                                                        onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
+                                                            toggleSeatSelection(asiento.id)}
+                                                        sx={{
+                                                            border: "1px solid gray",
+                                                            borderRadius: "4px",
+                                                            padding: "16px",
+                                                            textAlign: "center",
+                                                            marginBottom: "16px",
+                                                            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                                                            backgroundColor: selectedSeats.includes(asiento.id) ? "lightblue" : "white",
+                                                            cursor: "pointer"
+                                                        }}
+                                                    >
+                                                        <Typography variant="h6">Asiento {asiento.numero}</Typography>
+                                                        <Typography variant="body1">{asientosOcupados.find((a) => a.id === asiento.id) ? "Ocupado" : "Disponible"}</Typography>
+                                                    </Box>
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </Grid>
+
+                                    {/* Window on the right side */}
+                                    <Grid item xs={1}>
+                                        <Typography variant="subtitle1" align="center">
+                                            Ventanilla
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
+                            )}
                             <Box mt={2}>
                                 <Button
                                     type="submit"

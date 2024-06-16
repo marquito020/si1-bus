@@ -19,9 +19,9 @@ const ViajeForm = lazy(() => import('./viaje/ViajeForm'));
 const Clientes = lazy(() => import('./cliente/ClienteList'));
 const ClienteForm = lazy(() => import('./cliente/ClienteForm'));
 
-const Boletos = lazy(() => import('./boleto/BoletoList'));
-const BoletoForm = lazy(() => import('./boleto/BoletoForm'));
-const BoletoView = lazy(() => import('./boleto/BoletoView'));
+const Boletos = lazy(() => import('./pasaje/BoletoList'));
+const BoletoForm = lazy(() => import('./pasaje/BoletoForm'));
+const BoletoView = lazy(() => import('./pasaje/BoletoView'));
 
 const Roles = lazy(() => import('./rol/RolList'));
 const RolForm = lazy(() => import('./rol/RolForm'));
@@ -33,11 +33,14 @@ const Empleados = lazy(() => import('./empleado/EmpleadoList'));
 const EmpleadoForm = lazy(() => import('./empleado/EmpleadoForm'));
 
 const NotaVentas = lazy(() => import('./nota_venta/NotaVentaList'));
+const NotaVentaView = lazy(() => import('./nota_venta/NotaVentaView'));
 
 function Private() {
     return (
         <Routes>
             <Route element={<DefaultLayout />}>
+
+                {/* Lugares */}
                 <Route path={PrivateRoutes.LUGARES} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Lugares />
@@ -54,6 +57,8 @@ function Private() {
                     </Suspense>
                 } />
 
+
+                {/* Flotas */}
                 <Route path={PrivateRoutes.FLOTAS} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Flotas />
@@ -75,6 +80,8 @@ function Private() {
                     </Suspense>
                 } />
 
+
+                {/* Choferes */}
                 <Route path={PrivateRoutes.CHOFERES} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Choferes />
@@ -91,6 +98,8 @@ function Private() {
                     </Suspense>
                 } />
 
+
+                {/* Viajes */}
                 <Route path={PrivateRoutes.VIAJES} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Viajes />
@@ -106,6 +115,9 @@ function Private() {
                         <ViajeForm />
                     </Suspense>
                 } />
+
+
+                {/* Clientes */}
                 <Route path={PrivateRoutes.CLIENTES} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Clientes />
@@ -123,6 +135,7 @@ function Private() {
                 } />
 
 
+                {/* Boletos */}
                 <Route path={PrivateRoutes.BOLETOS} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Boletos />
@@ -145,6 +158,7 @@ function Private() {
                 } />
 
 
+                {/* Roles */}
                 <Route path={PrivateRoutes.ROLES} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Roles />
@@ -162,6 +176,7 @@ function Private() {
                 } />
 
 
+                {/* Metodo de pago */}
                 <Route path={PrivateRoutes.METODOS_PAGO} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <MetodoPagos />
@@ -178,7 +193,7 @@ function Private() {
                     </Suspense>
                 } />
 
-
+                {/* Empleados */}
                 <Route path={PrivateRoutes.EMPLEADOS} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <Empleados />
@@ -194,6 +209,11 @@ function Private() {
                 <Route path={PrivateRoutes.NOTAS_VENTA} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <NotaVentas />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.NOTAS_VENTA_VIEW} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <NotaVentaView />
                     </Suspense>
                 } />
             </Route>

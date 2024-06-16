@@ -29,7 +29,7 @@ export default function ClienteList() {
         }
     };
 
-    const handleDelete = async (cod) => {
+    /* const handleDelete = async (cod) => {
         try {
             await fetch(`${URL_BACKEND}/clientes/${cod}`, {
                 method: "DELETE",
@@ -42,7 +42,7 @@ export default function ClienteList() {
 
     const handleEdit = (cod) => {
         navigate("/clientes/edit/" + cod);
-    };
+    }; */
 
     useEffect(() => {
         loadClientes();
@@ -63,7 +63,7 @@ export default function ClienteList() {
         { field: 'ci', headerName: 'CI', width: 150 },
         { field: 'telefono', headerName: 'Teléfono', width: 150 },
         { field: 'fecha_nacimiento', headerName: 'Fecha de Nacimiento', width: 200 },
-        {
+        /* {
             field: 'action',
             headerName: 'Acción',
             width: 290,
@@ -88,7 +88,7 @@ export default function ClienteList() {
                     </Button>
                 </strong>
             ),
-        },
+        }, */
     ];
 
     return (

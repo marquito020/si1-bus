@@ -6,8 +6,8 @@ import { URL_BACKEND } from "../../../constants/routes";
 
 export default function LugarForm() {
   const [lugar, setLugar] = useState({
-    cod_Departamento: "",
-    cod_Provincia: "",
+    cod_departamento: "",
+    cod_provincia: "",
     cod: "",
     direccion: ""
   });
@@ -43,7 +43,7 @@ export default function LugarForm() {
 
     try {
       if (editing) {
-        await fetch(`${URL_BACKEND}/lugares/${params.cod_Departamento}/${params.cod_Provincia}/${params.cod}`, {
+        await fetch(`${URL_BACKEND}/lugares/${params.cod_departamento}/${params.cod_provincia}/${params.cod}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -69,14 +69,17 @@ export default function LugarForm() {
   };
 
   const loadLugar = async (cod_Departamento, cod_Provincia, cod) => {
+    setLoading(true);
     const res = await fetch(`${URL_BACKEND}/lugares/${cod_Departamento}/${cod_Provincia}/${cod}`);
     const data = await res.json();
+    console.log(data);
     setLugar({
-      cod_departamento: data.cod_Departamento,
-      cod_provincia: data.cod_Provincia,
+      cod_departamento: data.cod_departamento,
+      cod_provincia: data.cod_provincia,
       cod: data.cod,
       direccion: data.direccion
     });
+    setLoading(false);
     setEditing(true);
   };
 
@@ -94,81 +97,87 @@ export default function LugarForm() {
             {editing ? "Editar Lugar" : "Crear Lugar"}
           </Typography>
           <CardContent>
-            <form onSubmit={handleSubmit}>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between' }}>
-                <TextField
-                  select
-                  variant="filled"
-                  label="Departamento"
-                  name="cod_Departamento"
-                  onChange={handleChange}
-                  value={lugar.cod_Departamento}
-                  inputProps={{ style: { color: "white" } }}
-                  SelectProps={{ style: { color: "white" } }}
-                  InputLabelProps={{ style: { color: "white" } }}
-                  fullWidth
-                  sx={{ flex: '1 1 45%' }}
-                >
-                  {departamento.map((dept) => (
-                    <MenuItem key={dept.cod} value={dept.cod}>
-                      {dept.nombre}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  select
-                  variant="filled"
-                  label="Código de Provincia"
-                  name="cod_Provincia"
-                  onChange={handleChange}
-                  value={lugar.cod_Provincia}
-                  inputProps={{ style: { color: "white" } }}
-                  SelectProps={{ style: { color: "white" } }}
-                  InputLabelProps={{ style: { color: "white" } }}
-                  fullWidth
-                  sx={{ flex: '1 1 45%' }}
-                >
-                  {provincia.map((prov) => (
-                    <MenuItem key={prov.cod} value={prov.cod}>
-                      {prov.nombre}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  variant="filled"
-                  label="Código"
-                  name="cod"
-                  onChange={handleChange}
-                  value={lugar.cod}
-                  inputProps={{ style: { color: "white" } }}
-                  InputLabelProps={{ style: { color: "white" } }}
-                  fullWidth
-                  sx={{ flex: '1 1 45%' }}
-                />
-                <TextField
-                  variant="filled"
-                  label="Dirección"
-                  name="direccion"
-                  onChange={handleChange}
-                  value={lugar.direccion}
-                  inputProps={{ style: { color: "white" } }}
-                  InputLabelProps={{ style: { color: "white" } }}
-                  fullWidth
-                  sx={{ flex: '1 1 45%' }}
-                />
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                <Button variant="contained" color="primary" type="submit"
-                  disabled={!lugar.cod_Departamento || !lugar.cod_Provincia || !lugar.cod || !lugar.direccion}
-                >
-                  {loading ? (
-                    <CircularProgress color="inherit" size={24} />
-                  ) : (
-                    editing ? "Actualizar" : "Crear"
-                  )}
-                </Button>
-              </Box>
-            </form>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between' }}>
+                  <TextField
+                    select
+                    variant="filled"
+                    label="Departamento"
+                    name="cod_departamento"
+                    onChange={handleChange}
+                    value={lugar.cod_departamento}
+                    inputProps={{ style: { color: "white" } }}
+                    SelectProps={{ style: { color: "white" } }}
+                    InputLabelProps={{ style: { color: "white" } }}
+                    fullWidth
+                    sx={{ flex: '1 1 45%' }}
+                  >
+                    {departamento.map((dept) => (
+                      <MenuItem key={dept.cod} value={dept.cod}>
+                        {dept.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    variant="filled"
+                    label="Código de Provincia"
+                    name="cod_provincia"
+                    onChange={handleChange}
+                    value={lugar.cod_provincia}
+                    inputProps={{ style: { color: "white" } }}
+                    SelectProps={{ style: { color: "white" } }}
+                    InputLabelProps={{ style: { color: "white" } }}
+                    fullWidth
+                    sx={{ flex: '1 1 45%' }}
+                  >
+                    {provincia.map((prov) => (
+                      lugar.cod_departamento === prov.cod_departamento && (
+                        <MenuItem key={prov.cod} value={prov.cod}>
+                          {prov.nombre}
+                        </MenuItem>
+                      )
+                    ))}
+                  </TextField>
+                  <TextField
+                    variant="filled"
+                    label="Código"
+                    name="cod"
+                    onChange={handleChange}
+                    value={lugar.cod}
+                    inputProps={{ style: { color: "white" } }}
+                    InputLabelProps={{ style: { color: "white" } }}
+                    fullWidth
+                    sx={{ flex: '1 1 45%' }}
+                  />
+                  <TextField
+                    variant="filled"
+                    label="Dirección"
+                    name="direccion"
+                    onChange={handleChange}
+                    value={lugar.direccion}
+                    inputProps={{ style: { color: "white" } }}
+                    InputLabelProps={{ style: { color: "white" } }}
+                    fullWidth
+                    sx={{ flex: '1 1 45%' }}
+                  />
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                  <Button variant="contained" color="primary" type="submit"
+                    disabled={!lugar.cod_departamento || !lugar.cod_provincia || !lugar.cod || !lugar.direccion}
+                  >
+                    {loading ? (
+                      <CircularProgress color="inherit" size={24} />
+                    ) : (
+                      editing ? "Actualizar" : "Crear"
+                    )}
+                  </Button>
+                </Box>
+              </form>
+            )}
           </CardContent>
         </Card>
       </Grid>

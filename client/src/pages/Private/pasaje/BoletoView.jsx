@@ -65,7 +65,7 @@ export default function BoletoView() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'boleto.pdf';
+        a.download = `boleto${boleto.id}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

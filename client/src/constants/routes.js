@@ -58,6 +58,7 @@ export const PrivateRoutes = {
   NOTAS_VENTA: "/notas-venta",
   NOTAS_VENTA_CREATE: "/notas-venta" + PublicRoutes.CREAR,
   NOTAS_VENTA_EDIT: "/notas-venta" + PublicRoutes.EDITAR + "/:id",
+  NOTAS_VENTA_VIEW: "/notas-venta" + "/:id",
 
   HOME: "/home",
 };

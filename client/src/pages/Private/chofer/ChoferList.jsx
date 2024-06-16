@@ -1,8 +1,9 @@
-import { CardContent, Card, Typography, Button, Toolbar, Box, AppBar, Container, TextField, CircularProgress, Alert, Grid } from '@mui/material';
+import { Button, Toolbar, Box, AppBar, Container, TextField, CircularProgress, Alert } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { URL_BACKEND } from "../../../constants/routes";
+import { DataGrid } from '@mui/x-data-grid';
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ export default function ChoferList() {
   const [error, setError] = useState(null);
 
   const loadChoferes = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${URL_BACKEND}/choferes`);
       const data = await response.json();
@@ -63,6 +65,36 @@ export default function ChoferList() {
   const filteredChoferes = choferes.filter((chofer) =>
     chofer.ci_chofer.toString().includes(searchTerm)
   );
+
+  const columns = [
+    { field: 'ci_chofer', headerName: 'CI Chofer', width: 150 },
+    { field: 'nombre', headerName: 'Nombre', width: 150 },
+    { field: 'licencia', headerName: 'Licencia', width: 150 },
+    {
+      field: 'actions',
+      headerName: 'Acciones',
+      width: 250,
+      renderCell: (params) => (
+        <>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => navigate(`/choferes/${params.row.ci_chofer}/edit`)}
+            sx={{ mr: 1 }}
+          >
+            Editar
+          </Button>
+          <Button
+            variant='contained'
+            color='warning'
+            onClick={() => handleDelete(params.row.ci_chofer)}
+          >
+            Eliminar
+          </Button>
+        </>
+      ),
+    },
+  ];
 
   return (
     <ThemeProvider theme={theme}>
@@ -105,36 +137,15 @@ export default function ChoferList() {
         </Container>
       ) : (
         <Container sx={{ padding: '2rem 0' }}>
-          <Grid container spacing={3}>
-            {filteredChoferes.map((chofer) => (
-              <Grid item xs={12} sm={6} md={4} key={chofer.ci_chofer}>
-                <Card sx={{ backgroundColor: '#1e272e', color: 'white' }}>
-                  <CardContent>
-                    <Typography variant="h6">{chofer.nombre}</Typography>
-                    <Typography>CI: {chofer.ci_chofer}</Typography>
-                    <Typography>Licencia: {chofer.licencia}</Typography>
-                    <Box display="flex" justifyContent="flex-end" mt={2}>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        onClick={() => navigate(`/choferes/${chofer.ci_chofer}/edit`)}
-                        sx={{ mr: 1 }}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        variant='contained'
-                        color='warning'
-                        onClick={() => handleDelete(chofer.ci_chofer)}
-                      >
-                        Eliminar
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          <DataGrid
+            rows={filteredChoferes}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            autoHeight
+            disableSelectionOnClick
+            getRowId={(row) => row.ci_chofer}
+          />
         </Container>
       )}
     </ThemeProvider>

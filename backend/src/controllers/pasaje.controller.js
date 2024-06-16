@@ -119,7 +119,7 @@ const createBoleto = async (req, res) => {
         );
       }
       await client.query("COMMIT");
-      res.status(201).json({ message: "Boleto creado" });
+      res.status(201).json({ nota_venta: notaVenta.rows[0] })
     } catch (e) {
       await client.query("ROLLBACK");
       throw e;

@@ -37,7 +37,22 @@ const getNotaVenta = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT * FROM ${tabla} WHERE id_nota_venta = $1`,
+      `SELECT
+      nota_venta.id,
+      nota_venta.fecha,
+      nota_venta.precio_total,
+      nota_venta.id_cliente,
+      nota_venta.id_metodo_pago,
+      cliente.id_persona AS id_cliente,
+      persona.nombre AS nombre_cliente,
+      persona.apellido AS apellido_cliente,
+      persona.ci AS ci_cliente,
+      metodo_pago.tipo AS metodo_pago
+      FROM ${tabla}
+      JOIN public.cliente ON nota_venta.id_cliente = id_cliente
+      JOIN public.metodo_pago ON nota_venta.id_metodo_pago = metodo_pago.id
+      JOIN public.persona ON cliente.id_persona = persona.id
+      WHERE nota_venta.id = $1`,
       [id_nota_venta]
     );
 
@@ -46,7 +61,8 @@ const getNotaVenta = async (req, res) => {
     }
     res.json(result.rows[0]);
   } catch (error) {
-    res.json(error);
+    console.log(error);
+    res.status(500).json(error);
   }
 };
 

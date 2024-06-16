@@ -78,6 +78,10 @@ const getAsientosByViajeBoleto = async (req, res) => {
 
     console.log(boletos.rows);
 
+    if (boletos.rows.length === 0) {
+      return res.json([]);
+    }
+
     var asientos = [];
     for (var i = 0; i < boletos.rows.length; i++) {
       if (i === 0) {
