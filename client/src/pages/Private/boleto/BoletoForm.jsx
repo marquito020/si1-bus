@@ -25,6 +25,7 @@ export default function BoletoForm() {
     const [asientos, setAsiento] = useState([]);
     const [metodoPago, setMetodoPago] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [asientosOcupados, setAsientosOcupados] = useState([]);
 
     const handleChange = (e) => {
         setBoleto({
@@ -44,6 +45,13 @@ export default function BoletoForm() {
             .then(data => {
                 console.log(data);
                 setAsiento(data);
+            });
+
+        fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}/boleto`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setAsientosOcupados(data);
             });
     }
 
@@ -214,7 +222,9 @@ export default function BoletoForm() {
                                     {asientos.filter((_, index) => index % 3 === 0).map((asiento, index) => (
                                         <Box
                                             key={index}
-                                            onClick={() => toggleSeatSelection(asiento.id)}
+                                            /* onClick={() => toggleSeatSelection(asiento.id)} */
+                                            onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
+                                                toggleSeatSelection(asiento.id)}
                                             sx={{
                                                 border: "1px solid gray",
                                                 borderRadius: "4px",
@@ -227,7 +237,11 @@ export default function BoletoForm() {
                                             }}
                                         >
                                             <Typography variant="h6">Asiento {asiento.numero}</Typography>
-                                            <Typography variant="body1">{asiento.estado}</Typography>
+                                            <Typography variant="body1">{
+                                                asientosOcupados.find((a) => a.id === asiento.id)
+                                                    ? "Ocupado"
+                                                    : "Disponible"
+                                            }</Typography>
                                         </Box>
                                     ))}
                                 </Grid>
@@ -245,7 +259,8 @@ export default function BoletoForm() {
                                         {asientos.filter((_, index) => index % 3 !== 0).map((asiento, index) => (
                                             <Grid item xs={6} key={index}>
                                                 <Box
-                                                    onClick={() => toggleSeatSelection(asiento.id)}
+                                                    onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
+                                                        toggleSeatSelection(asiento.id)}
                                                     sx={{
                                                         border: "1px solid gray",
                                                         borderRadius: "4px",
@@ -258,7 +273,7 @@ export default function BoletoForm() {
                                                     }}
                                                 >
                                                     <Typography variant="h6">Asiento {asiento.numero}</Typography>
-                                                    <Typography variant="body1">{asiento.estado}</Typography>
+                                                    <Typography variant="body1">{asientosOcupados.find((a) => a.id === asiento.id) ? "Ocupado" : "Disponible"}</Typography>
                                                 </Box>
                                             </Grid>
                                         ))}

@@ -66,6 +66,48 @@ const getAsientosByViaje = async (req, res) => {
   }
 };
 
+const getAsientosByViajeBoleto = async (req, res) => {
+  const { cod_viaje } = req.params;
+  console.log(cod_viaje);
+
+  try {
+    const boletos = await pool.query(
+      `SELECT id_asiento FROM public.boleto WHERE cod_viaje = $1`,
+      [cod_viaje]
+    );
+
+    console.log(boletos.rows);
+
+    var asientos = [];
+    for (var i = 0; i < boletos.rows.length; i++) {
+      if (i === 0) {
+        asientos = await pool.query(
+          `SELECT * FROM ${tabla} WHERE id = $1`,
+          [boletos.rows[i].id_asiento]
+        );
+      } else {
+        const asiento = await pool.query(
+          `SELECT * FROM ${tabla} WHERE id = $1`,
+          [boletos.rows[i].id_asiento]
+        );
+        asientos.rows.push(asiento.rows[0]);
+      }
+    }
+
+    console.log(asientos.rows);
+
+    if (asientos.rows.length === 0) {
+      return res.status(404).json({ error: "Asiento no encontrado" });
+    }
+
+    res.json(asientos.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+}
+
+
 const updateAsiento = async (req, res) => {
   const { placa, numero } = req.params;
   const { estado } = req.body;
@@ -97,4 +139,5 @@ module.exports = {
   getAsiento,
   updateAsiento,
   getAsientosByViaje,
+  getAsientosByViajeBoleto,
 };

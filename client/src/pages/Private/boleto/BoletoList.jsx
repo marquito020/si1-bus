@@ -94,7 +94,7 @@ export default function BoletaList() {
                             { field: 'hora_salida', headerName: 'Hora Salida', width: 150 },
                             { field: 'hora_llegada', headerName: 'Hora Llegada', width: 150 },
                             { field: 'placa_flota', headerName: 'Placa Flota', width: 150 },
-                            { field: 'id_asiento', headerName: 'Asiento', width: 150 },
+                            { field: 'numero', headerName: 'Número Asiento', width: 150 },
                             {
                                 field: 'acciones',
                                 headerName: 'Acciones',

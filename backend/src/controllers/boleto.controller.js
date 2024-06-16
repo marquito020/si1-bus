@@ -18,10 +18,12 @@ const getBoletos = async (req, res) => {
       via.placa_flota,
       via.hora_salida,
       via.hora_llegada,
-      per.nombre
+      per.nombre,
+      asie.numero
     FROM ${tabla} bol
     JOIN ${tablaViaje} via ON bol.cod_viaje = via.cod
     JOIN public.persona per ON bol.id_cliente = per.id
+    JOIN public.asiento asie ON bol.id_asiento = asie.id
     ORDER BY bol.fecha DESC
     `);
     res.json(result.rows);
