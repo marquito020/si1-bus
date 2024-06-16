@@ -1,41 +1,27 @@
-import { Button, Card, CardContent, CircularProgress, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, Box, MenuItem, Select, InputLabel, FormControl
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { URL_BACKEND } from "../../../constants/routes";
 
 export default function FlotaForm() {
+  const navigate = useNavigate();
+  const { placa } = useParams();
   const [flota, setFlota] = useState({
     placa: "",
     marca: "",
     modelo: "",
     capacidad: "",
     cod_tipo_flota: "",
-    cod_estado_flota: "",
-    tipo: "",
-    estado: ""
+    cod_estado_flota: ""
   });
-  const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [loadingFlota, setLoadingFlota] = useState(false);
+  const [error, setError] = useState(null);
   const [tipoFlota, setTipoFlota] = useState([]);
   const [estadoFlota, setEstadoFlota] = useState([]);
-
-  useEffect(() => {
-    fetch(`${URL_BACKEND}/tipo_flotas`)
-      .then(res => res.json())
-      .then(data => setTipoFlota(data));
-
-    console.log(tipoFlota);
-
-    fetch(`${URL_BACKEND}/estado_flotas`)
-      .then(res => res.json())
-      .then(data => setEstadoFlota(data));
-
-    console.log(estadoFlota);
-  }, []);
-
-  const navigate = useNavigate();
-  const params = useParams();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,11 +33,10 @@ export default function FlotaForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
-      if (editing) {
-        await fetch(`${URL_BACKEND}/flotas/${params.placa}`, {
+      setLoading(true);
+      if (placa) {
+        await fetch(`${URL_BACKEND}/flotas/${placa}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -59,141 +44,155 @@ export default function FlotaForm() {
           body: JSON.stringify(flota),
         });
       } else {
-        console.log(flota);
         await fetch(`${URL_BACKEND}/flotas`, {
           method: "POST",
-          body: JSON.stringify(flota),
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(flota),
         });
       }
-
-      setLoading(false);
       navigate("/flotas");
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error saving flota:", error);
+      setError("Error saving flota");
+    } finally {
       setLoading(false);
     }
-  };
-
-  const loadFlota = async (placa) => {
-    const res = await fetch(`${URL_BACKEND}/flotas/${placa}`);
-    const data = await res.json();
-    setFlota({
-      placa: data.placa,
-      marca: data.marca,
-      modelo: data.modelo,
-      capacidad: data.capacidad,
-      cod_tipo_flota: data.cod_tipo_flota,
-      cod_estado_flota: data.cod_estado_flota,
-      tipo: data.tipo,
-      estado: data.estado
-    });
-    setEditing(true);
   };
 
   useEffect(() => {
-    if (params.placa) {
-      loadFlota(params.placa);
+    if (placa) {
+      setLoadingFlota(true);
+      const loadFlota = async () => {
+        try {
+          const response = await fetch(`${URL_BACKEND}/flotas/${placa}`);
+          const data = await response.json();
+          setFlota(data);
+          setLoadingFlota(false);
+        } catch (error) {
+          console.error("Error loading flota:", error);
+          setLoadingFlota(false);
+          setError("Error loading flota");
+        }
+      };
+      loadFlota();
     }
-  }, [params.placa]);
+
+    const loadTipoFlota = async () => {
+      const response = await fetch(`${URL_BACKEND}/tipo_flotas`);
+      const data = await response.json();
+      setTipoFlota(data);
+    };
+
+    const loadEstadoFlota = async () => {
+      const response = await fetch(`${URL_BACKEND}/estado_flotas`);
+      const data = await response.json();
+      setEstadoFlota(data);
+    };
+
+    loadTipoFlota();
+    loadEstadoFlota();
+  }, [placa]);
 
   return (
-    <Grid container direction='column' alignItems='center' justifyContent='center'>
-      <Grid item xs={3}>
-        <Card sx={{ mt: 10 }} style={{ background: '#1e272e', padding: '1rem' }}>
-          <Typography variant="5" textAlign='center' color='white'>
-            {editing ? "Editar Flota" : "Crear Flota"}
-          </Typography>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={8} md={6}>
+        <Card>
           <CardContent>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                variant="filled"
-                label='Placa'
-                sx={{ display: 'block', margin: '.5rem 0' }}
-                name="placa"
-                onChange={handleChange}
-                value={flota.placa}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
-              />
-              <TextField
-                variant="filled"
-                label='Marca'
-                sx={{ display: 'block', margin: '.5rem 0' }}
-                name="marca"
-                onChange={handleChange}
-                value={flota.marca}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
-              />
-              <TextField
-                variant="filled"
-                label='Modelo'
-                sx={{ display: 'block', margin: '.5rem 0' }}
-                name="modelo"
-                onChange={handleChange}
-                value={flota.modelo}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
-              />
-              <TextField
-                variant="filled"
-                label='Capacidad'
-                sx={{ display: 'block', margin: '.5rem 0' }}
-                name="capacidad"
-                onChange={handleChange}
-                value={flota.capacidad}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
-              />
-              <TextField
-                select
-                variant="filled"
-                label='Tipo'
-                sx={{ display: 'block', margin: '.5rem 0' }}
-                name="cod_tipo_flota"
-                onChange={handleChange}
-                value={flota.cod_tipo_flota}
-                inputProps={{ style: { color: "white" } }}
-                SelectProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
-              >
-                {tipoFlota.map((tipo) => (
-                  <MenuItem key={tipo.cod} value={tipo.cod}>
-                    {tipo.descripcion}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                select
-                variant="filled"
-                label='Estado'
-                sx={{ display: 'block', margin: '.5rem 0' }}
-                name="cod_estado_flota"
-                onChange={handleChange}
-                value={flota.cod_estado_flota}
-                inputProps={{ style: { color: "white" } }}
-                SelectProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
-              >
-                {estadoFlota.map((estado) => (
-                  <MenuItem key={estado.cod} value={estado.cod}>
-                    {estado.descripcion}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Button variant="contained" color="primary" type="submit"
-                disabled={!flota.placa || !flota.marca || !flota.modelo || !flota.capacidad || !flota.cod_tipo_flota || !flota.cod_estado_flota}
-              >
-                {loading ? (
-                  <CircularProgress color="inherit" size={24} />
-                ) : (
-                  editing ? "Actualizar" : "Crear"
-                )}
-              </Button>
-            </form>
+            <Typography variant="h4" gutterBottom>
+              {placa ? "Editar Flota" : "Nueva Flota"}
+            </Typography>
+            {loadingFlota ? <CircularProgress /> : (
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Placa"
+                  name="placa"
+                  value={flota.placa}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                />
+                <TextField
+                  label="Marca"
+                  name="marca"
+                  value={flota.marca}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                />
+                <TextField
+                  label="Modelo"
+                  name="modelo"
+                  value={flota.modelo}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                />
+                <TextField
+                  label="Capacidad"
+                  name="capacidad"
+                  value={flota.capacidad}
+                  onChange={handleChange}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                />
+                <FormControl variant="outlined" fullWidth margin="normal">
+                  <InputLabel>Tipo de Flota</InputLabel>
+                  <Select
+                    name="cod_tipo_flota"
+                    value={flota.cod_tipo_flota}
+                    onChange={handleChange}
+                    label="Tipo de Flota"
+                  >
+                    {tipoFlota.map((tipo) => (
+                      <MenuItem key={tipo.cod} value={tipo.cod}>
+                        {tipo.descripcion}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined" fullWidth margin="normal">
+                  <InputLabel>Estado de Flota</InputLabel>
+                  <Select
+                    name="cod_estado_flota"
+                    value={flota.cod_estado_flota}
+                    onChange={handleChange}
+                    label="Estado de Flota"
+                  >
+                    {estadoFlota.map((estado) => (
+                      <MenuItem key={estado.cod} value={estado.cod}>
+                        {estado.descripcion}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                  >
+                    {loading ? <CircularProgress size={24} /> : (
+                      placa ? "Actualizar" : "Guardar"
+                    )}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => navigate("/flotas")}
+                  >
+                    Volver
+                  </Button>
+                </Box>
+              </form>
+            )}
+            {error && <Typography color="error">{error}</Typography>}
           </CardContent>
         </Card>
       </Grid>

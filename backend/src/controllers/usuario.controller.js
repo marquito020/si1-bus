@@ -39,44 +39,7 @@ const getUsuario = async (req, res) => {
 
 // Crear un nuevo usuario
 const createUsuario = async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Todos los campos son obligatorios." });
-    }
-
-    const existingUser = await pool.query(
-      "SELECT * FROM usuario WHERE username = $1",
-      [username]
-    );
-
-    if (existingUser.rowCount > 0) {
-      return res.status(400).json({ error: "El usuario ya existe." });
-    }
-
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
-
-      const insertResult = await client.query(
-        User(username, password),
-      );
-
-      await client.query("COMMIT");
-
-      res.json(insertResult.rows[0]);
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    } finally {
-      client.release();
-    }
-  } catch (error) {
-    res.json(error);
-  }
+  const { nombre, apellido, ci, fecha_nacimiento, telefono } = req.body;
 };
 
 const updateUsuario = async (req, res) => {

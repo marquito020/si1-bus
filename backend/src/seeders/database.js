@@ -227,6 +227,7 @@ const tableViaje = `CREATE TABLE viaje (
     hora_Salida TIME NOT NULL,
     hora_Llegada TIME,
     precio FLOAT NOT NULL,
+    status BOOLEAN DEFAULT TRUE,
     placa_Flota VARCHAR(7) NOT NULL,
     cod_Lugar_Destino VARCHAR(10) NOT NULL,
     cod_Provincia_Destino VARCHAR(10) NOT NULL,
@@ -300,6 +301,89 @@ INSERT INTO viaje (
 ('VIA007', '2023-01-20', '16:30:00', 180.00, '7777DRR', 'LGR006', 'PRV002', 'DEP001', 'LGR001', 'PRV001', 'DEP001');
 `;
 
+const dropTablesViaje = `
+DROP TABLE IF EXISTS Viaje;
+`;
+
+const tableCliente = `CREATE TABLE Cliente(
+    Id_Persona INT NOT NULL PRIMARY KEY,
+    FOREIGN KEY (Id_Persona) REFERENCES Persona(Id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+`;
+
+const solvedPersonID = `
+SELECT MAX(id) FROM persona;
+SELECT setval(pg_get_serial_sequence('persona', 'id'), (SELECT MAX(id) FROM persona));
+`;
+
+const tableAsiento = `CREATE TABLE Asiento(
+    id SERIAL PRIMARY KEY,
+    numero INTEGER NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    placa_flota VARCHAR(7) NOT NULL,
+    FOREIGN KEY (placa_flota) REFERENCES flota(placa) ON UPDATE CASCADE ON DELETE CASCADE
+);
+`;
+
+const deleteFlota = `
+DELETE FROM flota;
+`;
+
+const deleteViaje = `
+DELETE FROM viaje;
+`;
+
+const dropAsiento = `
+DROP TABLE IF EXISTS Asiento;
+`;
+
+const tableMetodoPago = `CREATE TABLE Metodo_Pago(
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(20)
+);
+`;
+
+const metodoPagoSeeder = `
+INSERT INTO Metodo_Pago (id, tipo) VALUES
+('1', 'Efectivo'),
+('2', 'Tarjeta de Crédito'),
+('3', 'Tarjeta de Débito');
+`;
+
+const dropMetodoPago = `
+DROP TABLE IF EXISTS Metodo_Pago;
+`;
+
+const tableNotaVenta = `CREATE TABLE Nota_Venta(
+    id SERIAL PRIMARY KEY,
+    fecha DATE NOT NULL,
+    precio_total FLOAT NOT NULL,
+    id_cliente INT NOT NULL,
+    id_metodo_pago INT NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_persona) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+`;
+
+const tableBoleto = `CREATE TABLE Boleto(
+    id SERIAL PRIMARY KEY,
+    fecha DATE NOT NULL,
+    precio FLOAT NOT NULL,
+    cod_viaje VARCHAR(8) NOT NULL,
+    id_cliente INT NOT NULL,
+    id_asiento INT NOT NULL,
+    id_nota_venta INT NOT NULL,
+    FOREIGN KEY (cod_viaje) REFERENCES viaje(cod) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_persona) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_asiento) REFERENCES asiento(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_nota_venta) REFERENCES nota_venta(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+`;
+
+const dropBoleto = `
+DROP TABLE IF EXISTS Boleto;
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -326,4 +410,17 @@ module.exports = {
   lugarSeeder,
   choferSeeder,
   viajeSeeder,
+  dropTablesViaje,
+  tableCliente,
+  solvedPersonID,
+  tableAsiento,
+  deleteFlota,
+  deleteViaje,
+  dropAsiento,
+  tableMetodoPago,
+  metodoPagoSeeder,
+  dropMetodoPago,
+  tableBoleto,
+  dropBoleto,
+  tableNotaVenta,
 };

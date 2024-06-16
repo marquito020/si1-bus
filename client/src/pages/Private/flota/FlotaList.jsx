@@ -1,19 +1,24 @@
-import { CardContent, Card, Typography, Button, Toolbar, Box, AppBar, Container, TextField, Grid } from '@mui/material';
+import { Button, Toolbar, Box, AppBar, Container, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { URL_BACKEND } from "../../../constants/routes";
+import { DataGrid } from '@mui/x-data-grid';
 
 export default function FlotaList() {
   const navigate = useNavigate();
   const [flotas, setFlotas] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadFlotas = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${URL_BACKEND}/flotas`);
       const data = await response.json();
       setFlotas(data);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error('Error loading flotas:', error);
     }
   };
@@ -73,23 +78,28 @@ export default function FlotaList() {
           </Container>
         </AppBar>
       </Box>
-      <Container sx={{ padding: '2rem 0' }}>
-        <Grid container spacing={3}>
-          {filteredFlotas.map((flota) => (
-            <Grid item xs={12} sm={6} md={4} key={flota.placa}>
-              <Card sx={{ backgroundColor: '#1e272e', color: 'white' }}>
-                <CardContent>
-                  <Typography variant="h6">Placa: {flota.placa}</Typography>
-                  <Typography>Marca: {flota.marca}</Typography>
-                  <Typography>Modelo: {flota.modelo}</Typography>
-                  <Typography>Capacidad: {flota.capacidad}</Typography>
-                  <Typography>Tipo: {flota.tipo}</Typography>
-                  <Typography>Estado: {flota.estado}</Typography>
-                  <Box display="flex" justifyContent="flex-end" mt={2}>
+      {/* <Container sx={{ padding: '2rem 0' }}> */}
+        <Box sx={{ height: 400, width: '100%', marginTop: 2 }}>
+          <DataGrid
+            rows={filteredFlotas}
+            loading={isLoading}
+            columns={[
+              { field: 'placa', headerName: 'Placa', width: 150 },
+              { field: 'marca', headerName: 'Marca', width: 150 },
+              { field: 'modelo', headerName: 'Modelo', width: 150 },
+              { field: 'capacidad', headerName: 'Capacidad', width: 150 },
+              { field: 'tipo', headerName: 'Tipo', width: 150 },
+              { field: 'estado', headerName: 'Estado', width: 150 },
+              {
+                field: 'actions',
+                headerName: 'Acciones',
+                width: 320,
+                renderCell: (params) => (
+                  <strong>
                     <Button
                       variant='contained'
                       color='primary'
-                      onClick={() => navigate(`/flotas/${flota.placa}/edit`)}
+                      onClick={() => navigate(`/flotas/edit/${params.row.placa}`)}
                       sx={{ mr: 1 }}
                     >
                       Editar
@@ -97,17 +107,29 @@ export default function FlotaList() {
                     <Button
                       variant='contained'
                       color='warning'
-                      onClick={() => handleDelete(flota.placa)}
+                      onClick={() => handleDelete(params.row.placa)}
+                      sx={{ mr: 1 }}
                     >
                       Eliminar
                     </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+                    {/* Asientos */}
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={() => navigate(`/flotas/asientos/${params.row.placa}`)}
+                    >
+                      Asientos
+                    </Button>
+                  </strong>
+                ),
+              },
+            ]}
+            getRowId={(row) => row.placa}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+          />
+        </Box>
+      {/* </Container> */}
     </>
   );
 }

@@ -16,10 +16,7 @@ import FlotaIcon from '@mui/icons-material/AirportShuttle';
 import DriverIcon from '@mui/icons-material/DriveEta';
 import TravelIcon from '@mui/icons-material/FlightTakeoff';
 import PlaceIcon from '@mui/icons-material/Place';
-import SupplierIcon from '@mui/icons-material/LocalShipping';
-import InventoryIcon from '@mui/icons-material/Inventory';
 import NoteIcon from '@mui/icons-material/Note';
-import InvoiceIcon from '@mui/icons-material/Receipt';
 
 const theme = createTheme({
   palette: {
@@ -57,6 +54,7 @@ const DefaultLayout = () => {
       icon: <UserIcon />,
       items: [
         { label: <Link to="/users">Usuario</Link>, icon: <UserIcon /> },
+        { label: <Link to="/clientes">Cliente</Link>, icon: <UserIcon /> },
         { label: <Link to="/funcionalidades">Funcionalidad</Link>, icon: <FunctionIcon /> },
         { label: <Link to="/roles">Rol</Link>, icon: <RoleIcon /> },
         { label: <Link to="/flotas">Flota</Link>, icon: <FlotaIcon /> },
@@ -69,12 +67,20 @@ const DefaultLayout = () => {
       items: [
         { label: <Link to="/viajes">Viaje</Link>, icon: <TravelIcon /> },
         { label: <Link to="/lugares">Lugar</Link>, icon: <PlaceIcon /> },
-        { label: <Link to="/proveedores">Proveedor</Link>, icon: <SupplierIcon /> },
-        { label: <Link to="/inventarios">Inventario</Link>, icon: <InventoryIcon /> },
-        { label: <Link to="/nota-de-entrada">Nota de Entrada</Link>, icon: <NoteIcon /> },
-        { label: <Link to="/facturas">Facturas</Link>, icon: <InvoiceIcon /> },
+        /* Boleto */
+        { label: <Link to={"/boletos"}>Boleto</Link>, icon: <NoteIcon /> },
       ],
     },
+    {
+      label: "Reportes",
+      icon: <UserIcon />,
+      items: [
+        { label: "Reporte 1", icon: <UserIcon /> },
+        { label: "Reporte 2", icon: <UserIcon /> },
+        { label: "Reporte 3", icon: <UserIcon /> },
+        { label: "Reporte 4", icon: <UserIcon /> },
+      ],
+    }
   ];
 
   return (

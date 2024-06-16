@@ -24,17 +24,17 @@ const getFlota = async (req, res) => {
   const { placa } = req.params;
 
   try {
-    const result = await pool.query(`
-      SELECT flota.placa, flota.marca, flota.modelo, flota.capacidad,
-             tipo_flota.descripcion AS tipo, estado_flota.descripcion AS estado
+    const result = await pool.query(
+      `
+      SELECT flota.placa, flota.marca, flota.modelo, flota.capacidad, flota.cod_tipo_flota, flota.cod_estado_flota
       FROM flota
-      JOIN tipo_flota ON flota.cod_tipo_flota = tipo_flota.cod
-      JOIN estado_flota ON flota.cod_estado_flota = estado_flota.cod
       WHERE flota.placa = $1
-    `, [placa]);
+    `,
+      [placa]
+    );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Flota no encontrada' });
+      return res.status(404).json({ error: "Flota no encontrada" });
     }
     res.json(result.rows[0]);
   } catch (error) {
@@ -44,17 +44,30 @@ const getFlota = async (req, res) => {
 
 // Crear una nueva flota
 const createFlota = async (req, res) => {
-  const { placa, marca, modelo, capacidad, cod_tipo_flota, cod_estado_flota } = req.body;
+  const { placa, marca, modelo, capacidad, cod_tipo_flota, cod_estado_flota } =
+    req.body;
 
   try {
-    if (!placa || !marca || !modelo || !capacidad || !cod_tipo_flota || !cod_estado_flota) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    if (
+      !placa ||
+      !marca ||
+      !modelo ||
+      !capacidad ||
+      !cod_tipo_flota ||
+      !cod_estado_flota
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios." });
     }
 
-    const existingFlota = await pool.query('SELECT * FROM flota WHERE placa = $1', [placa]);
+    const existingFlota = await pool.query(
+      "SELECT * FROM flota WHERE placa = $1",
+      [placa]
+    );
 
     if (existingFlota.rowCount > 0) {
-      return res.status(400).json({ error: 'La flota ya existe.' });
+      return res.status(400).json({ error: "La flota ya existe." });
     }
 
     const client = await pool.connect();
@@ -68,7 +81,8 @@ const createFlota = async (req, res) => {
 
       await client.query("COMMIT");
 
-      // bitacora
+      await createAsiento(placa, capacidad);
+      /* // bitacora
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
       const { token } = req.cookies;
@@ -80,7 +94,7 @@ const createFlota = async (req, res) => {
           "INSERT INTO Bitacora (Fecha_Hora, Id_Usuario, accion) VALUES ($1, $2, $3)",
           [fechaFormateada, decodedToken.id, accion]
         );
-      }
+      } */
 
       res.json(insertResult.rows[0]);
     } catch (error) {
@@ -94,14 +108,44 @@ const createFlota = async (req, res) => {
   }
 };
 
+const createAsiento = async (placa, capacidad) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    for (let i = 1; i <= capacidad; i++) {
+      await client.query(
+        "INSERT INTO Asiento (numero, estado, placa_flota) VALUES ($1, $2, $3)",
+        [i, "Disponible", placa]
+      );
+    }
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 // Actualizar una flota
 const updateFlota = async (req, res) => {
   const { placa } = req.params;
-  const { marca, modelo, capacidad, cod_tipo_flota, cod_estado_flota } = req.body;
+  const { marca, modelo, capacidad, cod_tipo_flota, cod_estado_flota } =
+    req.body;
 
   try {
-    if (!marca || !modelo || !capacidad || !cod_tipo_flota || !cod_estado_flota) {
-      return res.status(400).json({ error: "Todos los campos son obligatorios." });
+    if (
+      !marca ||
+      !modelo ||
+      !capacidad ||
+      !cod_tipo_flota ||
+      !cod_estado_flota
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios." });
     }
 
     const updateResult = await pool.query(
@@ -124,7 +168,10 @@ const deleteFlota = async (req, res) => {
   const { placa } = req.params;
 
   try {
-    const existingFlota = await pool.query(`SELECT * FROM flota WHERE placa = $1`, [placa]);
+    const existingFlota = await pool.query(
+      `SELECT * FROM flota WHERE placa = $1`,
+      [placa]
+    );
 
     if (existingFlota.rowCount != 0) {
       await pool.query(`DELETE FROM flota WHERE placa = $1`, [placa]);
@@ -142,5 +189,5 @@ module.exports = {
   getFlota,
   createFlota,
   updateFlota,
-  deleteFlota
+  deleteFlota,
 };

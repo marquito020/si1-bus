@@ -17,11 +17,12 @@ export const PrivateRoutes = {
 
   FLOTAS: "/flotas",
   FLOTAS_CREATE: "/flotas" + PublicRoutes.CREAR,
-  FLOTAS_EDIT: "/flotas " + "/:placa" + PublicRoutes.EDITAR,
+  FLOTAS_EDIT: "/flotas" + PublicRoutes.EDITAR + "/:placa",
+  FLOTAS_ASIENTOS: "/flotas" + "/asientos" + "/:placa",
 
   VIAJES: "/viajes",
   VIAJES_CREATE: "/viajes" + PublicRoutes.CREAR,
-  VIAJES_EDIT: "/viajes" + "/:id" + PublicRoutes.EDITAR,
+  VIAJES_EDIT: "/viajes" + PublicRoutes.EDITAR + "/:cod",
 
   LUGARES: "/lugares",
   LUGARES_CREATE: "/lugares" + PublicRoutes.CREAR,
@@ -32,9 +33,17 @@ export const PrivateRoutes = {
     "/:cod" +
     PublicRoutes.EDITAR,
 
+  CLIENTES: "/clientes",
+  CLIENTES_CREATE: "/clientes" + PublicRoutes.CREAR,
+  CLIENTES_EDIT: "/clientes" + PublicRoutes.EDITAR + "/:id",
+
+  BOLETOS: "/boletos",
+  BOLETOS_CREATE: "/boletos" + PublicRoutes.CREAR,
+  BOLETOS_EDIT: "/boletos" + PublicRoutes.EDITAR + "/:id",
+
   HOME: "/home",
 };
 
 //url backend
-/* export const URL_BACKEND = "http://localhost:4000/api" */
-export const URL_BACKEND = "https://si1-bus-back.onrender.com/api";
+export const URL_BACKEND = "http://localhost:4000/api"
+/* export const URL_BACKEND = "https://si1-bus-back.onrender.com/api"; */

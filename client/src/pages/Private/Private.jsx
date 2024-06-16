@@ -8,12 +8,19 @@ const LugarForm = lazy(() => import('./lugar/LugarForm'));
 
 const Flotas = lazy(() => import('./flota/FlotaList'));
 const FlotaForm = lazy(() => import('./flota/FlotaForm'));
+const FlotaAsiento = lazy(() => import('./flota/FlotaAsiento'));
 
 const Choferes = lazy(() => import('./chofer/ChoferList'));
 const ChoferForm = lazy(() => import('./chofer/ChoferForm'));
 
 const Viajes = lazy(() => import('./viaje/ViajeList'));
 const ViajeForm = lazy(() => import('./viaje/ViajeForm'));
+
+const Clientes = lazy(() => import('./cliente/ClienteList'));
+const ClienteForm = lazy(() => import('./cliente/ClienteForm'));
+
+const Boletos = lazy(() => import('./boleto/BoletoList'));
+const BoletoForm = lazy(() => import('./boleto/BoletoForm'));
 
 function Private() {
     return (
@@ -50,6 +57,11 @@ function Private() {
                         <FlotaForm />
                     </Suspense>
                 } />
+                <Route path={PrivateRoutes.FLOTAS_ASIENTOS} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <FlotaAsiento />
+                    </Suspense>
+                } />
 
                 <Route path={PrivateRoutes.CHOFERES} element={
                     <Suspense fallback={<div>Loading...</div>}>
@@ -80,6 +92,38 @@ function Private() {
                 <Route path={PrivateRoutes.VIAJES_EDIT} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <ViajeForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.CLIENTES} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Clientes />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.CLIENTES_CREATE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ClienteForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.CLIENTES_EDIT} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ClienteForm />
+                    </Suspense>
+                } />
+
+
+                <Route path={PrivateRoutes.BOLETOS} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Boletos />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.BOLETOS_CREATE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <BoletoForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.BOLETOS_EDIT} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <BoletoForm />
                     </Suspense>
                 } />
             </Route>

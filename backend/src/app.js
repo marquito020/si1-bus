@@ -9,6 +9,11 @@ const lugarRoute = require('./routes/lugar.routes')
 const viajeRoute = require('./routes/viaje.routes')
 const usuarioRoute = require('./routes/usuario.routes')
 const loginRoute = require('./routes/login.routes')
+const clienteRoute = require('./routes/cliente.routes')
+const asientoRoute = require('./routes/asiento.routes')
+const boletoRoute = require('./routes/boleto.routes')
+const notaVentaRoute = require('./routes/nota_venta.routes')
+const metodoPagoRoute = require('./routes/metodo_pago.routes')
 
 const departamentoRoutes = require ('./routes/departamento.routes');
 const provinciaRoutes = require ("./routes/provincia.routes")
@@ -33,5 +38,10 @@ app.use('/api',usuarioRoute)
 
 app.use('/api',departamentoRoutes);
 app.use('/api',provinciaRoutes);
+app.use('/api',clienteRoute)
+app.use('/api',asientoRoute)
+app.use('/api',boletoRoute)
+app.use('/api',notaVentaRoute)
+app.use('/api',metodoPagoRoute)
 
 module.exports=app;
