@@ -50,6 +50,10 @@ export const PrivateRoutes = {
   METODOS_PAGO_CREATE: "/metodos-pago" + PublicRoutes.CREAR,
   METODOS_PAGO_EDIT: "/metodos-pago" + PublicRoutes.EDITAR + "/:id",
 
+  EMPLEADOS: "/empleados",
+  EMPLEADOS_CREATE: "/empleados" + PublicRoutes.CREAR,
+  EMPLEADOS_EDIT: "/empleados" + PublicRoutes.EDITAR + "/:id",
+
   HOME: "/home",
 };
 

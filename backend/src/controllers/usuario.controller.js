@@ -12,10 +12,24 @@ const orden = "id_persona";
 const getUsuarios = async (req, res) => {
   try {
     console.log("getUsuarios");
-    const result = await pool.query(`SELECT * FROM ${tabla} ORDER BY ${orden} ASC`);
+    const result = await pool.query(`SELECT
+    usuario.id_persona,
+    usuario.username,
+    usuario.password,
+    persona.nombre,
+    persona.apellido,
+    persona.ci,
+    persona.fecha_nacimiento,
+    persona.telefono,
+    rol.nombre AS rol
+    FROM public.usuario
+    JOIN public.persona ON usuario.id_persona = persona.id
+    JOIN public.rol ON usuario.id_rol = rol.id
+    ORDER BY usuario.id_persona ASC`);
     console.log(result.rows);
     res.json(result.rows);
   } catch (error) {
+    console.log(error);
     res.json(error);
   }
 };
@@ -39,7 +53,81 @@ const getUsuario = async (req, res) => {
 
 // Crear un nuevo usuario
 const createUsuario = async (req, res) => {
-  const { nombre, apellido, ci, fecha_nacimiento, telefono } = req.body;
+  const {
+    nombre,
+    apellido,
+    ci,
+    fecha_nacimiento,
+    telefono,
+    id_rol,
+    username,
+    password,
+  } = req.body;
+
+  console.log(req.body);
+
+  try {
+    if (
+      !nombre ||
+      !apellido ||
+      !ci ||
+      !fecha_nacimiento ||
+      !telefono ||
+      !id_rol ||
+      !username ||
+      !password
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios." });
+    }
+
+    const existingUser = await pool.query(
+      "SELECT * FROM public.persona WHERE ci = $1",
+      [ci]
+    );
+
+    if (existingUser.rowCount > 0) {
+      return res.status(400).json({ error: "El usuario ya existe." });
+    }
+
+    // Reset the sequence for the 'id' column in the 'persona' table
+    await pool.query(
+      `SELECT setval(pg_get_serial_sequence('persona', 'id'), (SELECT GREATEST(MAX(id), 1) FROM persona))`
+    );
+
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+
+      const resultPersona = await client.query(
+        `INSERT INTO persona (nombre, apellido, ci, fecha_nacimiento, telefono) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+        [nombre, apellido, ci, fecha_nacimiento, telefono]
+      );
+
+      const id_persona = resultPersona.rows[0].id;
+
+      const active = true;
+
+      const resultUsuario = await client.query(
+        `INSERT INTO usuario (id_persona, username, password, id_rol, activo) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        [id_persona, username, password, id_rol, active]
+      );
+
+      await client.query("COMMIT");
+
+      res.json(resultUsuario.rows[0]);
+    } catch (error) {
+      console.log(error);
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
 };
 
 const updateUsuario = async (req, res) => {

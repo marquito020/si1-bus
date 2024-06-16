@@ -47,37 +47,37 @@ export default function MetodoPagoList() {
     return (
         <>
             <Box sx={{ flexFlow: 1 }}>
-                <AppBar position="static" color="primary">
-                    <Container>
-                        <Toolbar>
-                            <TextField
-                                variant="outlined"
-                                placeholder="Buscar por ID"
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                value={searchTerm}
-                                sx={{
-                                    backgroundColor: 'white',
-                                    borderRadius: 1,
-                                    mr: 2,
-                                    width: { xs: '100%', sm: 'auto' }
-                                }}
-                            />
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => navigate('/metodos-pago/new')}
-                            >
-                                Crear Metodo de Pago
-                            </Button>
-                        </Toolbar>
-                    </Container>
-                </AppBar>
-                {error && (
-                    <Container sx={{ mt: 2 }}>
-                        <Alert severity="error">{error}</Alert>
-                    </Container>
-                )}
                 <Container sx={{ mt: 2 }}>
+                    <AppBar position="static" color="primary">
+                        <Container>
+                            <Toolbar>
+                                <TextField
+                                    variant="outlined"
+                                    placeholder="Buscar por ID"
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    value={searchTerm}
+                                    sx={{
+                                        backgroundColor: 'white',
+                                        borderRadius: 1,
+                                        mr: 2,
+                                        width: { xs: '100%', sm: 'auto' }
+                                    }}
+                                    />
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => navigate('/metodos-pago/new')}
+                                >
+                                    Crear Metodo de Pago
+                                </Button>
+                            </Toolbar>
+                        </Container>
+                    </AppBar>
+                    {error && (
+                        <Container sx={{ mt: 2 }}>
+                            <Alert severity="error">{error}</Alert>
+                        </Container>
+                    )}
                     <DataGrid
                         rows={filteredMetodosPago}
                         columns={[

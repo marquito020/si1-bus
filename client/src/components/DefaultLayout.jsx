@@ -53,7 +53,7 @@ const DefaultLayout = () => {
       label: "Gestion de Usuario",
       icon: <UserIcon />,
       items: [
-        { label: <Link to="/users">Usuario</Link>, icon: <UserIcon /> },
+        { label: <Link to="/empleados">Empleado</Link>, icon: <UserIcon /> },
         { label: <Link to="/clientes">Cliente</Link>, icon: <UserIcon /> },
         { label: <Link to="/metodos-pago">Metodo de Pago</Link>, icon: <NoteIcon />},
         { label: <Link to="/funcionalidades">Funcionalidad</Link>, icon: <FunctionIcon /> },

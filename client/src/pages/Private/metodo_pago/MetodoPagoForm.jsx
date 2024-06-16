@@ -1,6 +1,5 @@
 import {
-    Button, Card, CardContent, CircularProgress, Grid, TextField, Typography, Box, MenuItem, Select, InputLabel, FormControl
-} from "@mui/material";
+    Button, Card, CardContent, CircularProgress, Grid, TextField, Typography} from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { URL_BACKEND } from "../../../constants/routes";
@@ -79,37 +78,40 @@ export default function MetodoPagoForm() {
                 <Typography variant="h5" gutterBottom>
                     {id ? 'Editar' : 'Nuevo'} Método de Pago
                 </Typography>
-                <form onSubmit={handleSubmit}>
-                    <Grid container spacing={2} sx={{ mt: 2 }}>
-                        <TextField
-                            name="tipo"
-                            label="Tipo"
-                            value={metodoPago.tipo}
-                            onChange={handleChange}
-                            required
-                            fullWidth
-                        />
-                        <Grid item xs={12}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                disabled={loading}
-                                sx={{ mr: 2 }}
-                            >
-                                {loading ? <CircularProgress size={24} /> : 'Guardar'}
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => navigate("/metodos-pago")}
-                                disabled={loading}
-                            >
-                                Cancelar
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </form>
+                {loadingMetodoPago ? <CircularProgress /> :
+                    (
+                        <form onSubmit={handleSubmit}>
+                            <Grid container spacing={2} sx={{ mt: 2 }}>
+                                <TextField
+                                    name="tipo"
+                                    label="Tipo"
+                                    value={metodoPago.tipo}
+                                    onChange={handleChange}
+                                    required
+                                    fullWidth
+                                />
+                                <Grid item xs={12}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={loading}
+                                        sx={{ mr: 2 }}
+                                    >
+                                        {loading ? <CircularProgress size={24} /> : 'Guardar'}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => navigate("/metodos-pago")}
+                                        disabled={loading}
+                                    >
+                                        Cancelar
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    )}
                 {error && <Typography color="error">{error}</Typography>}
             </CardContent>
         </Card>
