@@ -46,6 +46,10 @@ export const PrivateRoutes = {
   ROLES_CREATE: "/roles" + PublicRoutes.CREAR,
   ROLES_EDIT: "/roles" + PublicRoutes.EDITAR + "/:id",
 
+  METODOS_PAGO: "/metodos-pago",
+  METODOS_PAGO_CREATE: "/metodos-pago" + PublicRoutes.CREAR,
+  METODOS_PAGO_EDIT: "/metodos-pago" + PublicRoutes.EDITAR + "/:id",
+
   HOME: "/home",
 };
 

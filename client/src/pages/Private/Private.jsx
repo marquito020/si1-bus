@@ -26,6 +26,9 @@ const BoletoView = lazy(() => import('./boleto/BoletoView'));
 const Roles = lazy(() => import('./rol/RolList'));
 const RolForm = lazy(() => import('./rol/RolForm'));
 
+const MetodoPagos = lazy(() => import('./metodo_pago/MetodoPagoList'));
+const MetodoPagoForm = lazy(() => import('./metodo_pago/MetodoPagoForm'));
+
 function Private() {
     return (
         <Routes>
@@ -150,6 +153,23 @@ function Private() {
                 <Route path={PrivateRoutes.ROLES_EDIT} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <RolForm />
+                    </Suspense>
+                } />
+
+
+                <Route path={PrivateRoutes.METODOS_PAGO} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <MetodoPagos />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.METODOS_PAGO_CREATE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <MetodoPagoForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.METODOS_PAGO_EDIT} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <MetodoPagoForm />
                     </Suspense>
                 } />
             </Route>
