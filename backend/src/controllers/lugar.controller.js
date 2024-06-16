@@ -1,6 +1,7 @@
 const pool = require("../db");
+const jwt = require("jsonwebtoken");
+const { TOKEN_SECRET } = require("../config");
 
-// Obtener todos los lugares con el nombre del departamento y la provincia
 const getLugares = async (req, res) => {
   try {
     const result = await pool.query(`
@@ -31,7 +32,8 @@ const getLugar = async (req, res) => {
   const { cod_Departamento, cod_Provincia, cod } = req.params;
 
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT 
         lugar.cod_Departamento, 
         departamento.nombre AS nombre_Departamento, 
@@ -47,10 +49,12 @@ const getLugar = async (req, res) => {
         departamento ON provincia.cod_Departamento = departamento.cod
       WHERE 
         lugar.cod_Departamento = $1 AND lugar.cod_Provincia = $2 AND lugar.cod = $3
-    `, [cod_Departamento, cod_Provincia, cod]);
+    `,
+      [cod_Departamento, cod_Provincia, cod]
+    );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Lugar no encontrado' });
+      return res.status(404).json({ error: "Lugar no encontrado" });
     }
     res.json(result.rows[0]);
   } catch (error) {
@@ -60,26 +64,49 @@ const getLugar = async (req, res) => {
 
 // Crear un nuevo lugar
 const createLugar = async (req, res) => {
-  const { cod_Departamento, cod_Provincia, cod, direccion } = req.body;
+  const { cod_departamento, cod_provincia, cod, direccion } = req.body;
+
+  console.log(req.body);
 
   try {
-    if (!cod_Departamento || !cod_Provincia || !cod || !direccion) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    if (!cod_departamento || !cod_provincia || !cod || !direccion) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios." });
     }
 
-    const existingLugar = await pool.query('SELECT * FROM lugar WHERE cod_Departamento = $1 AND cod_Provincia = $2 AND cod = $3', [cod_Departamento, cod_Provincia, cod]);
+    const existingLugar = await pool.query(
+      "SELECT * FROM lugar WHERE cod_departamento = $1 AND cod_Provincia = $2 AND cod = $3",
+      [cod_departamento, cod_provincia, cod]
+    );
 
     if (existingLugar.rowCount > 0) {
-      return res.status(400).json({ error: 'El lugar ya existe.' });
+      return res.status(400).json({ error: "El lugar ya existe." });
     }
 
     const insertResult = await pool.query(
       "INSERT INTO lugar (cod_Departamento, cod_Provincia, cod, direccion) VALUES ($1, $2, $3, $4) RETURNING *",
-      [cod_Departamento, cod_Provincia, cod, direccion]
+      [cod_departamento, cod_provincia, cod, direccion]
+    );
+
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const { token } = req.cookies;
+    const accion = `Insertar lugar ${cod_departamento}-${cod_provincia}-${cod}`;
+
+    const user = jwt.verify(token, TOKEN_SECRET);
+
+    console.log("user", user);
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.id]
     );
 
     res.json(insertResult.rows[0]);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en la creación del lugar." });
   }
 };
@@ -91,7 +118,9 @@ const updateLugar = async (req, res) => {
 
   try {
     if (!direccion) {
-      return res.status(400).json({ error: "El campo 'direccion' es obligatorio." });
+      return res
+        .status(400)
+        .json({ error: "El campo 'direccion' es obligatorio." });
     }
 
     const updateResult = await pool.query(
@@ -102,6 +131,21 @@ const updateLugar = async (req, res) => {
     if (updateResult.rowCount === 0) {
       return res.status(404).json({ error: "Lugar no encontrado." });
     }
+
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const { token } = req.cookies;
+    const accion = `Actualizar lugar ${cod_Departamento}-${cod_Provincia}-${cod}`;
+
+    const user = jwt.verify(token, TOKEN_SECRET);
+
+    console.log("user", user);
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.id]
+    );
 
     res.json(updateResult.rows[0]);
   } catch (error) {
@@ -114,10 +158,32 @@ const deleteLugar = async (req, res) => {
   const { cod_Departamento, cod_Provincia, cod } = req.params;
 
   try {
-    const existingLugar = await pool.query('SELECT * FROM lugar WHERE cod_Departamento = $1 AND cod_Provincia = $2 AND cod = $3', [cod_Departamento, cod_Provincia, cod]);
+    const existingLugar = await pool.query(
+      "SELECT * FROM lugar WHERE cod_Departamento = $1 AND cod_Provincia = $2 AND cod = $3",
+      [cod_Departamento, cod_Provincia, cod]
+    );
 
     if (existingLugar.rowCount > 0) {
-      await pool.query('DELETE FROM lugar WHERE cod_Departamento = $1 AND cod_Provincia = $2 AND cod = $3', [cod_Departamento, cod_Provincia, cod]);
+      await pool.query(
+        "DELETE FROM lugar WHERE cod_Departamento = $1 AND cod_Provincia = $2 AND cod = $3",
+        [cod_Departamento, cod_Provincia, cod]
+      );
+
+      /* Bitacora */
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toISOString();
+      const { token } = req.cookies;
+      const accion = `Eliminar lugar ${cod_Departamento}-${cod_Provincia}-${cod}`;
+
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
+      );
+
       res.json({ success: "Lugar eliminado correctamente" });
     } else {
       res.status(404).json({ error: "Lugar no encontrado." });
@@ -132,19 +198,24 @@ const getCodigoLugarOrigen = async (req, res) => {
   const { cod_Departamento, cod_Provincia } = req.query;
 
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT cod
       FROM lugar
       WHERE cod_Departamento = $1 AND cod_Provincia = $2
       LIMIT 1
-    `, [cod_Departamento, cod_Provincia]);
+    `,
+      [cod_Departamento, cod_Provincia]
+    );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Lugar de origen no encontrado' });
+      return res.status(404).json({ error: "Lugar de origen no encontrado" });
     }
     res.json({ codigo: result.rows[0].cod });
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener el código del lugar de origen." });
+    res
+      .status(500)
+      .json({ error: "Error al obtener el código del lugar de origen." });
   }
 };
 
@@ -153,19 +224,24 @@ const getCodigoLugarDestino = async (req, res) => {
   const { cod_Departamento, cod_Provincia } = req.query;
 
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT cod
       FROM lugar
       WHERE cod_Departamento = $1 AND cod_Provincia = $2
       LIMIT 1
-    `, [cod_Departamento, cod_Provincia]);
+    `,
+      [cod_Departamento, cod_Provincia]
+    );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Lugar de destino no encontrado' });
+      return res.status(404).json({ error: "Lugar de destino no encontrado" });
     }
     res.json({ codigo: result.rows[0].cod });
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener el código del lugar de destino." });
+    res
+      .status(500)
+      .json({ error: "Error al obtener el código del lugar de destino." });
   }
 };
 
@@ -176,5 +252,5 @@ module.exports = {
   updateLugar,
   deleteLugar,
   getCodigoLugarOrigen,
-  getCodigoLugarDestino
+  getCodigoLugarDestino,
 };

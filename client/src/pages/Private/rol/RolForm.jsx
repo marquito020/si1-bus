@@ -30,6 +30,7 @@ export default function RolForm() {
             if (editing) {
                 await fetch(`${URL_BACKEND}/roles/${params.id}`, {
                     method: "PUT",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -40,6 +41,7 @@ export default function RolForm() {
             } else {
                 try {
                     await fetch(`${URL_BACKEND}/roles`, {
+                        credentials: "include",
                         method: "POST",
                         body: JSON.stringify(rol),
                         headers: {

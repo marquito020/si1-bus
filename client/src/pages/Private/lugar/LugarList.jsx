@@ -28,6 +28,7 @@ export default function LugarList() {
   const handleDelete = async (cod_departamento, cod_provincia, cod) => {
     try {
       await fetch(`${URL_BACKEND}/lugares/${cod_departamento}/${cod_provincia}/${cod}`, {
+        credentials: "include",
         method: "DELETE",
       });
       setLugares(lugares.filter((lugar) => !(lugar.cod_departamento === cod_departamento && lugar.cod_provincia === cod_provincia && lugar.cod === cod)));

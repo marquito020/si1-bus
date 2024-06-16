@@ -36,6 +36,7 @@ export default function EmpleadoForm() {
             setLoading(true);
             const response = await fetch(`${URL_BACKEND}/usuarios`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },

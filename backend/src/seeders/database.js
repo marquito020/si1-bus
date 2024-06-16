@@ -38,13 +38,6 @@ CREATE TABLE Usuario(
     FOREIGN KEY (Id_Persona) REFERENCES Persona(Id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (Id_Rol) REFERENCES Rol(Id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-CREATE TABLE Bitacora(
-    ID SERIAL PRIMARY KEY,
-    Fecha_Hora TIMESTAMP NOT NULL,
-    Id_Usuario INT NOT NULL,
-    FOREIGN KEY (Id_Usuario) REFERENCES Usuario(Id_Persona) ON UPDATE CASCADE ON DELETE CASCADE
-);
 `;
 
 const personSeeder = `
@@ -384,6 +377,16 @@ const dropBoleto = `
 DROP TABLE IF EXISTS Boleto;
 `;
 
+const tableBitacora = `
+CREATE TABLE Bitacora(
+    ID SERIAL PRIMARY KEY,
+    Fecha_Hora TIMESTAMP NOT NULL,
+    Accion VARCHAR(100),
+    Id_Usuario INT NOT NULL,
+    FOREIGN KEY (Id_Usuario) REFERENCES Usuario(Id_Persona) ON UPDATE CASCADE ON DELETE CASCADE
+);
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -423,4 +426,5 @@ module.exports = {
   tableBoleto,
   dropBoleto,
   tableNotaVenta,
+  tableBitacora,
 };

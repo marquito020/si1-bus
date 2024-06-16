@@ -32,6 +32,7 @@ export default function RolList() {
     const handleDelete = async (id) => {
         try {
             await fetch(`${URL_BACKEND}/roles/${id}`, {
+                credentials: "include",
                 method: "DELETE",
             });
             setRoles(roles.filter((rol) => rol.id !== id));

@@ -44,6 +44,7 @@ export default function LugarForm() {
     try {
       if (editing) {
         await fetch(`${URL_BACKEND}/lugares/${params.cod_departamento}/${params.cod_provincia}/${params.cod}`, {
+          credentials: "include",
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -52,6 +53,7 @@ export default function LugarForm() {
         });
       } else {
         await fetch(`${URL_BACKEND}/lugares`, {
+          credentials: "include",
           method: "POST",
           body: JSON.stringify(lugar),
           headers: {

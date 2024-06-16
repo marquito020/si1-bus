@@ -50,6 +50,7 @@ export default function ChoferList() {
     try {
       await fetch(`${URL_BACKEND}/choferes/${ci_chofer}`, {
         method: "DELETE",
+        credentials: "include",
       });
       setChoferes(choferes.filter((chofer) => chofer.ci_chofer !== ci_chofer));
     } catch (error) {
@@ -98,35 +99,6 @@ export default function ChoferList() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ flexFlow: 1 }}>
-        <AppBar position="static" color="primary">
-          <Container>
-            <Toolbar>
-              <TextField
-                variant="outlined"
-                placeholder="Buscar por CI"
-                onChange={(e) => setSearchTerm(e.target.value)}
-                value={searchTerm}
-                sx={{ 
-                  backgroundColor: 'white', 
-                  borderRadius: 1, 
-                  mr: 2, 
-                  width: { xs: '100%', sm: 'auto' } 
-                }}
-              />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => navigate("/choferes/new")}
-                sx={{ textDecoration: 'none', color: "#ffffff", ml: { xs: 0, sm: 1 }, mt: { xs: 2, sm: 0 } }}
-                fullWidth={true}
-              >
-                Agregar Chofer
-              </Button>
-            </Toolbar>
-          </Container>
-        </AppBar>
-      </Box>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
           <CircularProgress />
@@ -137,6 +109,35 @@ export default function ChoferList() {
         </Container>
       ) : (
         <Container sx={{ padding: '2rem 0' }}>
+          <Box sx={{ flexFlow: 1 }}>
+            <AppBar position="static" color="primary">
+              <Container>
+                <Toolbar>
+                  <TextField
+                    variant="outlined"
+                    placeholder="Buscar por CI"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={searchTerm}
+                    sx={{
+                      backgroundColor: 'white',
+                      borderRadius: 1,
+                      mr: 2,
+                      width: { xs: '100%', sm: 'auto' }
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => navigate("/choferes/new")}
+                    sx={{ textDecoration: 'none', color: "#ffffff", ml: { xs: 0, sm: 1 }, mt: { xs: 2, sm: 0 } }}
+                    fullWidth={true}
+                  >
+                    Agregar Chofer
+                  </Button>
+                </Toolbar>
+              </Container>
+            </AppBar>
+          </Box>
           <DataGrid
             rows={filteredChoferes}
             columns={columns}

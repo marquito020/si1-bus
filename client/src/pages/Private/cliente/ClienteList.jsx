@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PrivateRoutes, URL_BACKEND } from "../../../constants/routes";
 import { DataGrid } from '@mui/x-data-grid';
 
+
 export default function ClienteList() {
     const navigate = useNavigate();
     const [clientes, setClientes] = useState([]);

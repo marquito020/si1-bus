@@ -10,7 +10,9 @@ const tabla = "chofer";
 // Obtener todos los choferes
 const getChoferes = async (req, res) => {
   try {
-    const result = await pool.query(`SELECT * FROM ${tabla} ORDER BY ci_chofer ASC`);
+    const result = await pool.query(
+      `SELECT * FROM ${tabla} ORDER BY ci_chofer ASC`
+    );
     res.json(result.rows);
   } catch (error) {
     res.json(error);
@@ -22,9 +24,12 @@ const getChofer = async (req, res) => {
   const { ci_chofer } = req.params;
 
   try {
-    const result = await pool.query(`SELECT * FROM ${tabla} WHERE ci_chofer = $1`, [ci_chofer]);
+    const result = await pool.query(
+      `SELECT * FROM ${tabla} WHERE ci_chofer = $1`,
+      [ci_chofer]
+    );
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Chofer no encontrado' });
+      return res.status(404).json({ error: "Chofer no encontrado" });
     }
     res.json(result.rows[0]);
   } catch (error) {
@@ -38,13 +43,18 @@ const createChofer = async (req, res) => {
 
   try {
     if (!ci_chofer || !licencia || !nombre) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios." });
     }
 
-    const existingChofer = await pool.query('SELECT * FROM chofer WHERE ci_chofer = $1', [ci_chofer]);
+    const existingChofer = await pool.query(
+      "SELECT * FROM chofer WHERE ci_chofer = $1",
+      [ci_chofer]
+    );
 
     if (existingChofer.rowCount > 0) {
-      return res.status(400).json({ error: 'El chofer ya existe.' });
+      return res.status(400).json({ error: "El chofer ya existe." });
     }
 
     const client = await pool.connect();
@@ -58,19 +68,20 @@ const createChofer = async (req, res) => {
 
       await client.query("COMMIT");
 
-      // bitacora
+      /* Bitacora */
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
       const { token } = req.cookies;
-      const accion = `creo EL CHOFER con CI = ${insertResult.rows[0].ci_chofer}`;
+      const accion = `Insertar chofer ${ci_chofer}`;
 
-      if (token) {
-        const decodedToken = jwt.verify(token, TOKEN_SECRET);
-        await pool.query(
-          "INSERT INTO Bitacora (Fecha_Hora, Id_Usuario, accion) VALUES ($1, $2, $3)",
-          [fechaFormateada, decodedToken.id, accion]
-        );
-      }
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
+      );
 
       res.json(insertResult.rows[0]);
     } catch (error) {
@@ -91,10 +102,15 @@ const updateChofer = async (req, res) => {
 
   try {
     if (!licencia || !nombre) {
-      return res.status(400).json({ error: "Todos los campos son obligatorios." });
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios." });
     }
 
-    const existingChofer = await pool.query("SELECT * FROM chofer WHERE nombre = $1 AND ci_chofer <> $2", [nombre, ci_chofer]);
+    const existingChofer = await pool.query(
+      "SELECT * FROM chofer WHERE nombre = $1 AND ci_chofer <> $2",
+      [nombre, ci_chofer]
+    );
 
     if (existingChofer.rowCount > 0) {
       return res.status(400).json({ error: "El chofer ya existe." });
@@ -109,6 +125,21 @@ const updateChofer = async (req, res) => {
       return res.status(404).json({ error: "Chofer no encontrado." });
     }
 
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const { token } = req.cookies;
+    const accion = `Actualizar chofer ${ci_chofer}`;
+
+    const user = jwt.verify(token, TOKEN_SECRET);
+
+    console.log("user", user);
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.id]
+    );
+
     res.json(updateResult.rows[0]);
   } catch (error) {
     res.json(error);
@@ -120,10 +151,31 @@ const deleteChofer = async (req, res) => {
   const { ci_chofer } = req.params;
 
   try {
-    const existingChofer = await pool.query(`SELECT * FROM ${tabla} WHERE ci_chofer = $1`, [ci_chofer]);
+    const existingChofer = await pool.query(
+      `SELECT * FROM ${tabla} WHERE ci_chofer = $1`,
+      [ci_chofer]
+    );
 
     if (existingChofer.rowCount != 0) {
-      await pool.query(`DELETE FROM ${tabla} WHERE ci_chofer = $1`, [ci_chofer]);
+      await pool.query(`DELETE FROM ${tabla} WHERE ci_chofer = $1`, [
+        ci_chofer,
+      ]);
+
+      /* Bitacora */
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toISOString();
+      const { token } = req.cookies;
+      const accion = `Eliminar chofer ${ci_chofer}`;
+
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
+      );
+
       res.json({ success: "Chofer eliminado correctamente" });
     } else {
       res.status(400).json({ error: "El chofer no existe." });
@@ -138,5 +190,5 @@ module.exports = {
   getChofer,
   createChofer,
   updateChofer,
-  deleteChofer
+  deleteChofer,
 };

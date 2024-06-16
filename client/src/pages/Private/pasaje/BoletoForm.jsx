@@ -65,6 +65,7 @@ export default function BoletoForm() {
             console.log({ ...boleto, id_asiento: selectedSeats });
             const response = await fetch(`${URL_BACKEND}/boletos`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },

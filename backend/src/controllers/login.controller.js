@@ -18,6 +18,8 @@ const login = async (req, res) => {
         .json({ error: "Usuario o contraseña incorrectos." });
     }
 
+    console.log("USER", user.rows[0]);
+
     const validPassword = user.rows[0].password === password;
 
     if (!validPassword) {
@@ -26,24 +28,32 @@ const login = async (req, res) => {
         .json({ error: "Usuario o contraseña incorrectos." });
     }
 
-    const roles = await pool.query(
-      "SELECT * FROM public.rol"
-    );
+    const roles = await pool.query("SELECT * FROM public.rol");
 
-    const rolUsuario = roles.rows.find(
-      (rol) => rol.id === user.rows[0].id_rol
-    );
+    const rolUsuario = roles.rows.find((rol) => rol.id === user.rows[0].id_rol);
 
     const accessToken = await createAccessToken({
       username: user.rows[0].username,
+      rol: rolUsuario,
+      id: user.rows[0].id_persona,
     });
+
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const accion = `inicio sesion`;
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.rows[0].id_persona]
+    );
 
     res.json({
       accessToken,
       user: {
         username: user.rows[0].username,
         rol: rolUsuario,
-        id: user.rows[0].id,
+        id: user.rows[0].id_persona,
       },
     });
   } catch (error) {

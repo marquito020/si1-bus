@@ -1,5 +1,7 @@
 const pool = require("../db");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
+const { TOKEN_SECRET } = require("../config");
 
 const tabla = "Cliente";
 const orden = "id_persona";
@@ -70,6 +72,21 @@ const createCliente = async (req, res) => {
     await pool.query(`INSERT INTO cliente (id_persona) VALUES ($1)`, [
       personaId,
     ]);
+
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const { token } = req.cookies;
+    const accion = `Creación de cliente ${nombre} ${apellido}`;
+
+    const user = jwt.verify(token, TOKEN_SECRET);
+
+    console.log("user", user);
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.id]
+    );
 
     res.json({
       message: "Cliente creado correctamente",

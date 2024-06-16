@@ -31,6 +31,7 @@ export default function ChoferForm() {
       if (editing) {
         await fetch(`${URL_BACKEND}/choferes/${params.id}`, {
           method: "PUT",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -39,6 +40,7 @@ export default function ChoferForm() {
       } else {
         await fetch(`${URL_BACKEND}/choferes`, {
           method: "POST",
+          credentials: "include",
           body: JSON.stringify(chofer),
           headers: {
             "Content-Type": "application/json",

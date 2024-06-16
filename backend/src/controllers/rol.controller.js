@@ -1,5 +1,6 @@
 const pool = require("../db");
-
+const jwt = require("jsonwebtoken");
+const { TOKEN_SECRET } = require("../config");
 const tabla = "public.rol";
 const orden = "id";
 
@@ -45,6 +46,21 @@ const createRol = async (req, res) => {
       `INSERT INTO rol (nombre, activo) VALUES ($1, $2) RETURNING id`,
       [nombre, activo]
     );
+
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const { token } = req.cookies;
+    const accion = `Creación de rol ${nombre}`;
+
+    const user = jwt.verify(token, TOKEN_SECRET);
+
+    console.log("user", user);
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.id]
+    );
     res.json(result.rows[0]);
   } catch (error) {
     console.log(error);
@@ -75,6 +91,21 @@ const updateRol = async (req, res) => {
         [nombre, id]
       );
 
+      /* Bitacora */
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toISOString();
+      const { token } = req.cookies;
+      const accion = `Actualizar rol ${id}`;
+
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
+      );
+
       await client.query("COMMIT");
       res.json(updateResult.rows[0]);
     } catch (e) {
@@ -99,6 +130,21 @@ const deleteRol = async (req, res) => {
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Rol no encontrado" });
     }
+
+    /* Bitacora */
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString();
+    const { token } = req.cookies;
+    const accion = `Eliminación de rol con ID ${id}`;
+
+    const user = jwt.verify(token, TOKEN_SECRET);
+
+    console.log("user", user);
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+      [fechaFormateada, accion, user.id]
+    );
     res.json({ success: "Rol eliminado correctamente" });
   } catch (error) {
     res.json(error);

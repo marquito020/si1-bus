@@ -66,7 +66,14 @@ export default function FlotaForm() {
       setLoadingFlota(true);
       const loadFlota = async () => {
         try {
-          const response = await fetch(`${URL_BACKEND}/flotas/${placa}`);
+          const response = await fetch(`${URL_BACKEND}/flotas/${placa}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
           const data = await response.json();
           setFlota(data);
           setLoadingFlota(false);

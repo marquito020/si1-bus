@@ -15,6 +15,7 @@ const getFlotas = async (req, res) => {
     `);
     res.json(result.rows);
   } catch (error) {
+    console.log(error);
     res.json(error);
   }
 };
@@ -22,6 +23,9 @@ const getFlotas = async (req, res) => {
 // Obtener una flota por su placa
 const getFlota = async (req, res) => {
   const { placa } = req.params;
+  const { accessToken } = req.cookies;
+  console.log("placa", placa);
+  console.log("token", accessToken);
 
   try {
     const result = await pool.query(
@@ -38,7 +42,7 @@ const getFlota = async (req, res) => {
     }
     res.json(result.rows[0]);
   } catch (error) {
-    res.json(error);
+    res.status(500).json({ error: "Error al obtener la flota." });
   }
 };
 
@@ -82,28 +86,17 @@ const createFlota = async (req, res) => {
       await client.query("COMMIT");
 
       await createAsiento(placa, capacidad);
-      /* // bitacora
-      const fechaActual = new Date();
-      const fechaFormateada = fechaActual.toISOString();
-      const { token } = req.cookies;
-      const accion = `creó la flota con placa = ${insertResult.rows[0].placa}`;
-
-      if (token) {
-        const decodedToken = jwt.verify(token, TOKEN_SECRET);
-        await pool.query(
-          "INSERT INTO Bitacora (Fecha_Hora, Id_Usuario, accion) VALUES ($1, $2, $3)",
-          [fechaFormateada, decodedToken.id, accion]
-        );
-      } */
 
       res.json(insertResult.rows[0]);
     } catch (error) {
+      console.log(error);
       await client.query("ROLLBACK");
       res.status(500).json({ error: "Error en la creación de la flota." });
     } finally {
       client.release();
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error en la creación de la flota." });
   }
 };

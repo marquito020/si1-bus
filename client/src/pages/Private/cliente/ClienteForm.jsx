@@ -17,7 +17,7 @@ export default function ClienteForm() {
     });
 
     const [loading, setLoading] = useState(false);
-    const [loadingCliente, setLoadingCliente] = useState(true);
+    const [loadingCliente, setLoadingCliente] = useState(false);
     const [error, setError] = useState(null);
 
     const handleChange = (e) => {
@@ -32,6 +32,7 @@ export default function ClienteForm() {
         try {
             setLoading(true);
             const response = await fetch(`${URL_BACKEND}/clientes`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

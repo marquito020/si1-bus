@@ -1,4 +1,6 @@
 const pool = require("../db");
+const jwt = require("jsonwebtoken");
+const { TOKEN_SECRET } = require("../config");
 
 const tabla = "public.boleto";
 const tablaViaje = "public.viaje";
@@ -118,8 +120,24 @@ const createBoleto = async (req, res) => {
           ]
         );
       }
+
+      /* Bitacora */
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toISOString();
+      const { token } = req.cookies;
+      const accion = `Creación de boleto y nota de venta`;
+
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
+      );
+
       await client.query("COMMIT");
-      res.status(201).json({ nota_venta: notaVenta.rows[0] })
+      res.status(201).json({ nota_venta: notaVenta.rows[0] });
     } catch (e) {
       await client.query("ROLLBACK");
       throw e;

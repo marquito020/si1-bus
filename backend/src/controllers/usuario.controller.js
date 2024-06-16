@@ -1,7 +1,8 @@
 const pool = require("../db");
-/* const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { createAccessToken } = require("../libs/jwt");
-const { TOKEN_SECRET } = require("../config"); */
+const { TOKEN_SECRET } = require("../config");
 const { User } = require("../models/user.model");
 
 // tabla global a usar
@@ -112,6 +113,21 @@ const createUsuario = async (req, res) => {
       const resultUsuario = await client.query(
         `INSERT INTO usuario (id_persona, username, password, id_rol, activo) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
         [id_persona, username, password, id_rol, active]
+      );
+
+      /* Bitacora */
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toISOString();
+      const { token } = req.cookies;
+      const accion = `Creación de usuario ${username}`;
+
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
       );
 
       await client.query("COMMIT");

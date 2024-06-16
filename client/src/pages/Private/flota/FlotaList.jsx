@@ -13,7 +13,13 @@ export default function FlotaList() {
   const loadFlotas = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${URL_BACKEND}/flotas`);
+      const response = await fetch(`${URL_BACKEND}/flotas`, {
+        method: 'GET',
+        credentials: 'include', // Incluye cookies en la solicitud
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const data = await response.json();
       setFlotas(data);
       setIsLoading(false);
@@ -79,56 +85,56 @@ export default function FlotaList() {
         </AppBar>
       </Box>
       {/* <Container sx={{ padding: '2rem 0' }}> */}
-        <Box sx={{ height: 400, width: '100%', marginTop: 2 }}>
-          <DataGrid
-            rows={filteredFlotas}
-            loading={isLoading}
-            columns={[
-              { field: 'placa', headerName: 'Placa', width: 150 },
-              { field: 'marca', headerName: 'Marca', width: 150 },
-              { field: 'modelo', headerName: 'Modelo', width: 150 },
-              { field: 'capacidad', headerName: 'Capacidad', width: 150 },
-              { field: 'tipo', headerName: 'Tipo', width: 150 },
-              { field: 'estado', headerName: 'Estado', width: 150 },
-              {
-                field: 'actions',
-                headerName: 'Acciones',
-                width: 320,
-                renderCell: (params) => (
-                  <strong>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      onClick={() => navigate(`/flotas/edit/${params.row.placa}`)}
-                      sx={{ mr: 1 }}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant='contained'
-                      color='warning'
-                      onClick={() => handleDelete(params.row.placa)}
-                      sx={{ mr: 1 }}
-                    >
-                      Eliminar
-                    </Button>
-                    {/* Asientos */}
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      onClick={() => navigate(`/flotas/asientos/${params.row.placa}`)}
-                    >
-                      Asientos
-                    </Button>
-                  </strong>
-                ),
-              },
-            ]}
-            getRowId={(row) => row.placa}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-          />
-        </Box>
+      <Box sx={{ height: 400, width: '100%', marginTop: 2 }}>
+        <DataGrid
+          rows={filteredFlotas}
+          loading={isLoading}
+          columns={[
+            { field: 'placa', headerName: 'Placa', width: 150 },
+            { field: 'marca', headerName: 'Marca', width: 150 },
+            { field: 'modelo', headerName: 'Modelo', width: 150 },
+            { field: 'capacidad', headerName: 'Capacidad', width: 150 },
+            { field: 'tipo', headerName: 'Tipo', width: 150 },
+            { field: 'estado', headerName: 'Estado', width: 150 },
+            {
+              field: 'actions',
+              headerName: 'Acciones',
+              width: 320,
+              renderCell: (params) => (
+                <strong>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={() => navigate(`/flotas/edit/${params.row.placa}`)}
+                    sx={{ mr: 1 }}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    variant='contained'
+                    color='warning'
+                    onClick={() => handleDelete(params.row.placa)}
+                    sx={{ mr: 1 }}
+                  >
+                    Eliminar
+                  </Button>
+                  {/* Asientos */}
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={() => navigate(`/flotas/asientos/${params.row.placa}`)}
+                  >
+                    Asientos
+                  </Button>
+                </strong>
+              ),
+            },
+          ]}
+          getRowId={(row) => row.placa}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 20]}
+        />
+      </Box>
       {/* </Container> */}
     </>
   );

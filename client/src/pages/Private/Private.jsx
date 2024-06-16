@@ -35,6 +35,8 @@ const EmpleadoForm = lazy(() => import('./empleado/EmpleadoForm'));
 const NotaVentas = lazy(() => import('./nota_venta/NotaVentaList'));
 const NotaVentaView = lazy(() => import('./nota_venta/NotaVentaView'));
 
+const BitacoraList = lazy(() => import('./bitacora/BitacoraList'));
+
 function Private() {
     return (
         <Routes>
@@ -214,6 +216,13 @@ function Private() {
                 <Route path={PrivateRoutes.NOTAS_VENTA_VIEW} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <NotaVentaView />
+                    </Suspense>
+                } />
+
+                {/* Bitacora */}
+                <Route path={PrivateRoutes.BITACORAS} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <BitacoraList />
                     </Suspense>
                 } />
             </Route>

@@ -46,6 +46,7 @@ export default function ViajeList() {
     try {
       await fetch(`${URL_BACKEND}/viajes/cancel/${cod}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json'
         },

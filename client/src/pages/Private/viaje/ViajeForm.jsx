@@ -43,6 +43,7 @@ export default function ViajeForm() {
       if (editing) {
         await fetch(`${URL_BACKEND}/viajes/${params.cod}`, {
           method: "PUT",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -52,6 +53,7 @@ export default function ViajeForm() {
         try {
           await fetch(`${URL_BACKEND}/viajes`, {
             method: "POST",
+            credentials: "include",
             body: JSON.stringify(viaje),
             headers: {
               "Content-Type": "application/json",
