@@ -4,7 +4,7 @@ const {
   getBoletos,
   getBoleto,
   createBoleto,
-} = require("../controllers/boleto.controller");
+} = require("../controllers/pasaje.controller");
 
 const router = Router();
 

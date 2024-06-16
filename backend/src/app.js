@@ -14,6 +14,7 @@ const asientoRoute = require('./routes/asiento.routes')
 const boletoRoute = require('./routes/boleto.routes')
 const notaVentaRoute = require('./routes/nota_venta.routes')
 const metodoPagoRoute = require('./routes/metodo_pago.routes')
+const rolRoute = require('./routes/rol.routes')
 
 const departamentoRoutes = require ('./routes/departamento.routes');
 const provinciaRoutes = require ("./routes/provincia.routes")
@@ -43,5 +44,6 @@ app.use('/api',asientoRoute)
 app.use('/api',boletoRoute)
 app.use('/api',notaVentaRoute)
 app.use('/api',metodoPagoRoute)
+app.use('/api',rolRoute)
 
 module.exports=app;

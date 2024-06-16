@@ -39,7 +39,24 @@ const getBoleto = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT * FROM ${tabla} WHERE cod_boleto = $1`,
+      `SELECT
+        bol.id,
+        bol.fecha,
+        bol.precio,
+        bol.id_asiento,
+        bol.id_cliente,
+        bol.cod_viaje,
+        via.fecha,
+        via.placa_flota,
+        via.hora_salida,
+        via.hora_llegada,
+        per.nombre,
+        asie.numero
+      FROM ${tabla} bol
+      JOIN ${tablaViaje} via ON bol.cod_viaje = via.cod
+      JOIN public.persona per ON bol.id_cliente = per.id
+      JOIN public.asiento asie ON bol.id_asiento = asie.id
+      WHERE bol.id = $1`,
       [cod_boleto]
     );
 

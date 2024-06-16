@@ -83,49 +83,49 @@ export default function BoletaList() {
                         <Alert severity="error">{error}</Alert>
                     </Container>
                 )}
-                <Container sx={{ mt: 2 }}>
-                    <DataGrid
-                        rows={filteredBoletas}
-                        columns={[
-                            { field: 'id', headerName: 'Código', width: 150 },
-                            { field: 'fecha', headerName: 'Fecha', width: 150 },
-                            { field: 'precio', headerName: 'Precio', width: 150 },
-                            { field: 'nombre', headerName: 'Cliente', width: 150 },
-                            { field: 'hora_salida', headerName: 'Hora Salida', width: 150 },
-                            { field: 'hora_llegada', headerName: 'Hora Llegada', width: 150 },
-                            { field: 'placa_flota', headerName: 'Placa Flota', width: 150 },
-                            { field: 'numero', headerName: 'Número Asiento', width: 150 },
-                            {
-                                field: 'acciones',
-                                headerName: 'Acciones',
-                                width: 250,
-                                renderCell: (params) => (
-                                    <>
-                                        {/* Ver */}
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => navigate(`/boletos/${params.row.id}`)}
-                                            style={{ marginRight: 8 }}
-                                        >
-                                            Ver
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={() => handleDelete(params.row.id)}
-                                        >
-                                            Eliminar
-                                        </Button>
-                                    </>
-                                ),
-                            },
-                        ]}
-                        pageSize={5}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        loading={loading}
-                    />
-                </Container>
+                {/* <Container sx={{ mt: 2 }}> */}
+                <DataGrid
+                    rows={filteredBoletas}
+                    columns={[
+                        { field: 'id', headerName: 'Código', width: 150 },
+                        { field: 'fecha', headerName: 'Fecha', width: 150 },
+                        { field: 'precio', headerName: 'Precio', width: 150 },
+                        { field: 'nombre', headerName: 'Cliente', width: 150 },
+                        { field: 'hora_salida', headerName: 'Hora Salida', width: 150 },
+                        { field: 'hora_llegada', headerName: 'Hora Llegada', width: 150 },
+                        { field: 'placa_flota', headerName: 'Placa Flota', width: 150 },
+                        { field: 'numero', headerName: 'Número Asiento', width: 150 },
+                        {
+                            field: 'acciones',
+                            headerName: 'Acciones',
+                            width: 250,
+                            renderCell: (params) => (
+                                <>
+                                    {/* Ver */}
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => navigate(`/boletos/${params.row.id}`)}
+                                        style={{ marginRight: 8 }}
+                                    >
+                                        Ver
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => handleDelete(params.row.id)}
+                                    >
+                                        Eliminar
+                                    </Button>
+                                </>
+                            ),
+                        },
+                    ]}
+                    pageSize={5}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    loading={loading}
+                />
+                {/* </Container> */}
             </Box>
         </>
     );

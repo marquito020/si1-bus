@@ -40,6 +40,11 @@ export const PrivateRoutes = {
   BOLETOS: "/boletos",
   BOLETOS_CREATE: "/boletos" + PublicRoutes.CREAR,
   BOLETOS_EDIT: "/boletos" + PublicRoutes.EDITAR + "/:id",
+  BOLETOS_VIEW: "/boletos" + "/:id",
+
+  ROLES: "/roles",
+  ROLES_CREATE: "/roles" + PublicRoutes.CREAR,
+  ROLES_EDIT: "/roles" + PublicRoutes.EDITAR + "/:id",
 
   HOME: "/home",
 };

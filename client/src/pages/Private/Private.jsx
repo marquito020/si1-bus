@@ -21,6 +21,10 @@ const ClienteForm = lazy(() => import('./cliente/ClienteForm'));
 
 const Boletos = lazy(() => import('./boleto/BoletoList'));
 const BoletoForm = lazy(() => import('./boleto/BoletoForm'));
+const BoletoView = lazy(() => import('./boleto/BoletoView'));
+
+const Roles = lazy(() => import('./rol/RolList'));
+const RolForm = lazy(() => import('./rol/RolForm'));
 
 function Private() {
     return (
@@ -124,6 +128,28 @@ function Private() {
                 <Route path={PrivateRoutes.BOLETOS_EDIT} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <BoletoForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.BOLETOS_VIEW} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <BoletoView />
+                    </Suspense>
+                } />
+
+
+                <Route path={PrivateRoutes.ROLES} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Roles />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.ROLES_CREATE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <RolForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.ROLES_EDIT} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <RolForm />
                     </Suspense>
                 } />
             </Route>
