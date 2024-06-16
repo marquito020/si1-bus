@@ -32,6 +32,8 @@ const MetodoPagoForm = lazy(() => import('./metodo_pago/MetodoPagoForm'));
 const Empleados = lazy(() => import('./empleado/EmpleadoList'));
 const EmpleadoForm = lazy(() => import('./empleado/EmpleadoForm'));
 
+const NotaVentas = lazy(() => import('./nota_venta/NotaVentaList'));
+
 function Private() {
     return (
         <Routes>
@@ -185,6 +187,13 @@ function Private() {
                 <Route path={PrivateRoutes.EMPLEADOS_CREATE} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <EmpleadoForm />
+                    </Suspense>
+                } />
+
+                {/* Nota Ventas */}
+                <Route path={PrivateRoutes.NOTAS_VENTA} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <NotaVentas />
                     </Suspense>
                 } />
             </Route>

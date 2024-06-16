@@ -4,8 +4,8 @@ const { getNotasVenta, getNotaVenta, createNotaVenta } = require("../controllers
 
 const router = Router();
 
-router.get("/notas_venta", getNotasVenta);
-router.get("/notas_venta/:id_nota_venta", getNotaVenta);
-router.post("/notas_venta", createNotaVenta);
+router.get("/notas-venta", getNotasVenta);
+router.get("/notas-venta/:id_nota_venta", getNotaVenta);
+router.post("/notas-enta", createNotaVenta);
 
 module.exports = router;

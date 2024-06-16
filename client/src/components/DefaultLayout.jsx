@@ -70,16 +70,15 @@ const DefaultLayout = () => {
         { label: <Link to="/lugares">Lugar</Link>, icon: <PlaceIcon /> },
         /* Boleto */
         { label: <Link to={"/boletos"}>Boleto</Link>, icon: <NoteIcon /> },
+        /* Nota de Venta */
+        { label: <Link to={"/notas-venta"}>Nota de Venta</Link>, icon: <NoteIcon /> },
       ],
     },
     {
-      label: "Reportes",
-      icon: <UserIcon />,
+      label: "Bitacora",
+      icon: <NoteIcon />,
       items: [
-        { label: "Reporte 1", icon: <UserIcon /> },
-        { label: "Reporte 2", icon: <UserIcon /> },
-        { label: "Reporte 3", icon: <UserIcon /> },
-        { label: "Reporte 4", icon: <UserIcon /> },
+        { label: <Link to="/bitacora">Bitacora</Link>, icon: <NoteIcon /> },
       ],
     }
   ];

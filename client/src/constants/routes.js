@@ -54,6 +54,11 @@ export const PrivateRoutes = {
   EMPLEADOS_CREATE: "/empleados" + PublicRoutes.CREAR,
   EMPLEADOS_EDIT: "/empleados" + PublicRoutes.EDITAR + "/:id",
 
+
+  NOTAS_VENTA: "/notas-venta",
+  NOTAS_VENTA_CREATE: "/notas-venta" + PublicRoutes.CREAR,
+  NOTAS_VENTA_EDIT: "/notas-venta" + PublicRoutes.EDITAR + "/:id",
+
   HOME: "/home",
 };
 
