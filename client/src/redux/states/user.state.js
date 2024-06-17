@@ -20,7 +20,7 @@ const persistLocalStorageUser = (data) => {
   localStorage.setItem("accessToken", data.accessToken);
   const token = localStorage.getItem("accessToken"); // O de donde obtengas tu token
   console.log("token", token);
-  document.cookie = `token=${token}; path=/;`;
+  document.cookie = `token=${token}; path=/; secure; HttpOnly; SameSite=Strict`;
 };
 
 const clearLocalStorageUser = () => {

@@ -8,28 +8,19 @@ const login = async (req, res) => {
   try {
     await loginSchema.parse({ username, password });
 
-    const user = await pool.query("SELECT * FROM usuario WHERE username = $1", [
-      username,
-    ]);
+    const user = await pool.query("SELECT * FROM usuario WHERE username = $1", [username]);
 
     if (user.rowCount === 0) {
-      return res
-        .status(401)
-        .json({ error: "Usuario o contraseña incorrectos." });
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
     }
-
-    console.log("USER", user.rows[0]);
 
     const validPassword = user.rows[0].password === password;
 
     if (!validPassword) {
-      return res
-        .status(401)
-        .json({ error: "Usuario o contraseña incorrectos." });
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
     }
 
     const roles = await pool.query("SELECT * FROM public.rol");
-
     const rolUsuario = roles.rows.find((rol) => rol.id === user.rows[0].id_rol);
 
     const accessToken = await createAccessToken({
@@ -47,6 +38,13 @@ const login = async (req, res) => {
       `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
       [fechaFormateada, accion, user.rows[0].id_persona]
     );
+
+    // Establecer la cookie con el token
+    res.cookie('token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Asegúrate de que sea seguro en producción
+      sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax', // Ajusta esto según sea necesario
+    });
 
     res.json({
       accessToken,
