@@ -48,6 +48,7 @@ export default function RolForm() {
                             "Content-Type": "application/json",
                         },
                     });
+                    console.log("Cookie:", document.cookie);
                 } catch (error) {
                     console.error("Error submitting form:", error);
                 } finally {
