@@ -94,7 +94,7 @@ export default function NotaVentaList() {
                             </Toolbar>
                         </Container>
                     </AppBar>
-                    <Box sx={{ height: 400, width: '100%' }}>
+                    {/* <Box sx={{ height: 400, width: '100%' }}> */}
                         <DataGrid
                             rows={filteredNotaVentas}
                             columns={columns}
@@ -104,7 +104,7 @@ export default function NotaVentaList() {
                             disableSelectionOnClick
                             onRowClick={(row) => navigate(`/notas-venta/${row.row.id}`)}
                         />
-                    </Box>
+                    {/* </Box> */}
                     {error && (
                         <Container sx={{ mt: 2 }}>
                             <Alert severity="error">{error}</Alert>
