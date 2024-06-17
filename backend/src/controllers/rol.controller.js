@@ -52,6 +52,8 @@ const createRol = async (req, res) => {
     const fechaFormateada = fechaActual.toISOString();
     const { token } = req.cookies;
     const reqToken = req.cookies.token;
+    console.log("req", req.cookies);
+    console.log("reqs", req.cookie);
     console.log("token", token);
     console.log("reqToken", reqToken);
     const accion = `Creación de rol ${nombre}`;
