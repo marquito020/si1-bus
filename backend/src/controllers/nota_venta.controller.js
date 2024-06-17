@@ -1,28 +1,28 @@
 const pool = require("../db");
 
-const tabla = "public.nota_venta";
+const tabla = "nota_venta";
 const tablaBoleto = "public.boleto";
 
 // Obtener todas las notas de venta
 const getNotasVenta = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT
-      nota_venta.id,
-      nota_venta.fecha,
-      nota_venta.precio_total,
-      nota_venta.id_cliente,
-      nota_venta.id_metodo_pago,
-      cliente.id_persona AS id_cliente,
-      persona.nombre AS nombre_cliente,
-      persona.apellido AS apellido_cliente,
-      persona.ci AS ci_cliente,
-      metodo_pago.tipo AS metodo_pago
-      FROM ${tabla}
-      JOIN public.cliente ON nota_venta.id_cliente = id_cliente
-      JOIN public.metodo_pago ON nota_venta.id_metodo_pago = metodo_pago.id
-      JOIN public.persona ON cliente.id_persona = persona.id
-      ORDER BY nota_venta.id ASC`
+      `SELECT DISTINCT
+    nota_venta.id,
+    nota_venta.fecha,
+    nota_venta.precio_total,
+    nota_venta.id_cliente,
+    nota_venta.id_metodo_pago,
+    cliente.id_persona AS id_cliente,
+    persona.nombre AS nombre_cliente,
+    persona.apellido AS apellido_cliente,
+    persona.ci AS ci_cliente,
+    metodo_pago.tipo AS metodo_pago
+    FROM public.${tabla} AS nota_venta
+    JOIN public.cliente ON nota_venta.id_cliente = cliente.id_persona
+    JOIN public.metodo_pago ON nota_venta.id_metodo_pago = metodo_pago.id
+    JOIN public.persona ON cliente.id_persona = persona.id
+    ORDER BY nota_venta.id ASC`
     );
     res.json(result.rows);
   } catch (error) {
@@ -37,24 +37,26 @@ const getNotaVenta = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT
-      nota_venta.id,
-      nota_venta.fecha,
-      nota_venta.precio_total,
-      nota_venta.id_cliente,
-      nota_venta.id_metodo_pago,
-      cliente.id_persona AS id_cliente,
-      persona.nombre AS nombre_cliente,
-      persona.apellido AS apellido_cliente,
-      persona.ci AS ci_cliente,
-      metodo_pago.tipo AS metodo_pago
-      FROM ${tabla}
-      JOIN public.cliente ON nota_venta.id_cliente = id_cliente
+      `SELECT DISTINCT
+        nota_venta.id,
+        nota_venta.fecha,
+        nota_venta.precio_total,
+        nota_venta.id_cliente,
+        nota_venta.id_metodo_pago,
+        cliente.id_persona AS id_cliente,
+        persona.nombre AS nombre_cliente,
+        persona.apellido AS apellido_cliente,
+        persona.ci AS ci_cliente,
+        metodo_pago.tipo AS metodo_pago
+      FROM public.${tabla} AS nota_venta
+      JOIN public.cliente ON nota_venta.id_cliente = cliente.id_persona
       JOIN public.metodo_pago ON nota_venta.id_metodo_pago = metodo_pago.id
       JOIN public.persona ON cliente.id_persona = persona.id
       WHERE nota_venta.id = $1`,
       [id_nota_venta]
     );
+
+    console.log("Nota de venta encontrada: ", result.rows[0]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Nota de venta no encontrada" });
