@@ -11,22 +11,20 @@ const EmptyUserState = {
     rol: {
       id: "",
       nombre: "",
-    },
+    }
   },
 };
 
 const persistLocalStorageUser = (data) => {
   localStorage.setItem("user", JSON.stringify(data.user));
   localStorage.setItem("accessToken", data.accessToken);
-  const token = localStorage.getItem("accessToken");
-  document.cookie = `token=${token}; path=/; Secure; HttpOnly; SameSite=None;`;
+  document.cookie = `token=${data.accessToken}`;
 };
-
 
 const clearLocalStorageUser = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("accessToken");
-  /* document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; */
+  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 };
 
 export const userSlice = createSlice({
