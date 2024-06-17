@@ -51,11 +51,8 @@ const createRol = async (req, res) => {
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
     const { token } = req.cookies;
-    const reqToken = req.cookies.token;
-    console.log("req", req.cookies);
-    console.log("reqs", req.cookie);
+    console.log("req.cookies", req.cookies);
     console.log("token", token);
-    console.log("reqToken", reqToken);
     const accion = `Creación de rol ${nombre}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);

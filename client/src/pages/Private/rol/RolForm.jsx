@@ -41,8 +41,8 @@ export default function RolForm() {
             } else {
                 try {
                     await fetch(`${URL_BACKEND}/roles`, {
-                        credentials: "include",
                         method: "POST",
+                        credentials: "include",
                         body: JSON.stringify(rol),
                         headers: {
                             "Content-Type": "application/json",

@@ -39,11 +39,10 @@ const login = async (req, res) => {
       [fechaFormateada, accion, user.rows[0].id_persona]
     );
 
-    // Establecer la cookie con el token
     res.cookie('token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Asegúrate de que sea seguro en producción
-      sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax', // Ajusta esto según sea necesario
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Asegúrate de que tu frontend también esté usando https
     });
 
     res.json({
