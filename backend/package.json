@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "echo 'Building the project...' && yarn install",
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
