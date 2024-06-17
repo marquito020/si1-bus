@@ -47,10 +47,14 @@ export default function ChoferList() {
   };
 
   const handleDelete = async (ci_chofer) => {
+    const token = localStorage.getItem("accessToken");
     try {
       await fetch(`${URL_BACKEND}/choferes/${ci_chofer}`, {
         method: "DELETE",
         credentials: "include",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
       });
       setChoferes(choferes.filter((chofer) => chofer.ci_chofer !== ci_chofer));
     } catch (error) {

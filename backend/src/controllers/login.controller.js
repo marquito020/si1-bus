@@ -6,18 +6,24 @@ const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    await loginSchema.parse({ username, password });
+    loginSchema.parse({ username, password });
 
-    const user = await pool.query("SELECT * FROM usuario WHERE username = $1", [username]);
+    const user = await pool.query("SELECT * FROM usuario WHERE username = $1", [
+      username,
+    ]);
 
     if (user.rowCount === 0) {
-      return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
+      return res
+        .status(401)
+        .json({ error: "Usuario o contraseña incorrectos." });
     }
 
     const validPassword = user.rows[0].password === password;
 
     if (!validPassword) {
-      return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
+      return res
+        .status(401)
+        .json({ error: "Usuario o contraseña incorrectos." });
     }
 
     const roles = await pool.query("SELECT * FROM public.rol");
@@ -39,10 +45,10 @@ const login = async (req, res) => {
       [fechaFormateada, accion, user.rows[0].id_persona]
     );
 
-    res.cookie('token', accessToken, {
+    res.cookie("token", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
 
     res.json({

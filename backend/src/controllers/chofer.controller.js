@@ -71,12 +71,11 @@ const createChofer = async (req, res) => {
       /* Bitacora */
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
-      const { token } = req.cookies;
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
       const accion = `Insertar chofer ${ci_chofer}`;
 
       const user = jwt.verify(token, TOKEN_SECRET);
-
-      console.log("user", user);
 
       await pool.query(
         `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
@@ -128,7 +127,8 @@ const updateChofer = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Actualizar chofer ${ci_chofer}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);
@@ -164,7 +164,8 @@ const deleteChofer = async (req, res) => {
       /* Bitacora */
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
-      const { token } = req.cookies;
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
       const accion = `Eliminar chofer ${ci_chofer}`;
 
       const user = jwt.verify(token, TOKEN_SECRET);

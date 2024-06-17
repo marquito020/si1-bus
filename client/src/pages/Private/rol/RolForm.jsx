@@ -27,12 +27,14 @@ export default function RolForm() {
         setLoading(true);
 
         try {
+            const token = localStorage.getItem("accessToken");
             if (editing) {
                 await fetch(`${URL_BACKEND}/roles/${params.id}`, {
                     method: "PUT",
                     credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
                     },
                     body: JSON.stringify(rol),
                 });
@@ -46,9 +48,9 @@ export default function RolForm() {
                         body: JSON.stringify(rol),
                         headers: {
                             "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
                         },
                     });
-                    console.log("Cookie:", document.cookie);
                 } catch (error) {
                     console.error("Error submitting form:", error);
                 } finally {

@@ -42,12 +42,14 @@ export default function LugarForm() {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("accessToken");
       if (editing) {
         await fetch(`${URL_BACKEND}/lugares/${params.cod_departamento}/${params.cod_provincia}/${params.cod}`, {
           credentials: "include",
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(lugar),
         });
@@ -58,6 +60,7 @@ export default function LugarForm() {
           body: JSON.stringify(lugar),
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
         });
       }

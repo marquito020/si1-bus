@@ -30,10 +30,14 @@ export default function RolList() {
     };
 
     const handleDelete = async (id) => {
+        const token = localStorage.getItem("accessToken");
         try {
             await fetch(`${URL_BACKEND}/roles/${id}`, {
                 credentials: "include",
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
             });
             setRoles(roles.filter((rol) => rol.id !== id));
         } catch (error) {

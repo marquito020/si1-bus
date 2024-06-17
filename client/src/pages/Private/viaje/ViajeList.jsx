@@ -30,7 +30,7 @@ export default function ViajeList() {
     }
   };
 
-  const handleDelete = async (cod) => {
+  /* const handleDelete = async (cod) => {
     try {
       await fetch(`${URL_BACKEND}/viajes/${cod}`, {
         method: "DELETE",
@@ -40,15 +40,17 @@ export default function ViajeList() {
       console.error('Error deleting viaje:', error);
       setError('Error deleting viaje');
     }
-  };
+  }; */
 
   const cancelViaje = async (cod) => {
+    const token = localStorage.getItem("accessToken");
     try {
       await fetch(`${URL_BACKEND}/viajes/cancel/${cod}`, {
         method: "PUT",
         credentials: "include",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ status: false })
       });
@@ -109,7 +111,7 @@ export default function ViajeList() {
               <path d="M12.146 0.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zm-10.896 10.897L1 14.293 3.707 13 11 5.707 9.293 4 2 11.293z" />
             </svg>
           </Button>
-          <Button
+          {/* <Button
             variant='contained'
             color='warning'
             onClick={() => handleDelete(params.row.cod)}
@@ -118,7 +120,7 @@ export default function ViajeList() {
               <path d="M5.5 5.5v7a.5.5 0 0 0 1 0v-7a.5.5 0 0 0-1 0zm3 0v7a.5.5 0 0 0 1 0v-7a.5.5 0 0 0-1 0zm3 0v7a.5.5 0 0 0 1 0v-7a.5.5 0 0 0-1 0zM4.118 1.572a.5.5 0 0 0-.473.33L3 3H1.5a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13l-.645-1.098a.5.5 0 0 0-.473-.33H10.5V1a1.5 1.5 0 0 0-3 0v.572H4.118zm2.5-.572h3V1a.5.5 0 0 0-1 0v.5h-1V1a.5.5 0 0 0-1 0v.5z"/>
               <path d="M2.5 4.5V14a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V4.5h-11zM4 5v8.5a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5V5h1zm9 0h1v8.5a.5.5 0 0 1-.5.5H12.5a.5.5 0 0 1-.5-.5V5z"/>
             </svg>
-          </Button>
+          </Button> */}
           <Button
             variant='contained'
             color='error'

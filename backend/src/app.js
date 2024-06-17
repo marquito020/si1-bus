@@ -25,8 +25,9 @@ const app = express();
 
 app.use(
   cors({
-    /* origin: "http://localhost:5173", */
-    origin: "https://si1-bus.onrender.com",
+    /* origin: "https://7baf-181-41-146-171.ngrok-free.app", */
+    /* origin: "https://si1-bus.onrender.com", */
+    origin: ["http://localhost:5173", "https://7baf-181-41-146-171.ngrok-free.app", "https://si1-bus.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

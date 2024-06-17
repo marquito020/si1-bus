@@ -118,7 +118,8 @@ const createUsuario = async (req, res) => {
       /* Bitacora */
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
-      const { token } = req.cookies;
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
       const accion = `Creación de usuario ${username}`;
 
       const user = jwt.verify(token, TOKEN_SECRET);

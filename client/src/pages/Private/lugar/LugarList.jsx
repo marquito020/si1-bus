@@ -26,10 +26,15 @@ export default function LugarList() {
   };
 
   const handleDelete = async (cod_departamento, cod_provincia, cod) => {
+    const token = localStorage.getItem("accessToken");
     try {
       await fetch(`${URL_BACKEND}/lugares/${cod_departamento}/${cod_provincia}/${cod}`, {
         credentials: "include",
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
       });
       setLugares(lugares.filter((lugar) => !(lugar.cod_departamento === cod_departamento && lugar.cod_provincia === cod_provincia && lugar.cod === cod)));
     } catch (error) {
@@ -83,8 +88,8 @@ export default function LugarList() {
 
   return (
     <>
-      <Box sx={{ flexFlow: 1 }}>
-        <Container>
+      {/* <Box sx={{ flexFlow: 1 }}> */}
+        {/* <Container> */}
           <AppBar position="static" color="primary">
             <Container>
               <Toolbar>
@@ -110,9 +115,9 @@ export default function LugarList() {
               </Toolbar>
             </Container>
           </AppBar>
-        </Container>
-      </Box>
-      <Container sx={{ padding: '2rem 0' }}>
+        {/* </Container> */}
+      {/* </Box> */}
+      {/* <Container sx={{ padding: '2rem 0' }}> */}
         {error && <Alert severity="error">{error}</Alert>}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -129,7 +134,7 @@ export default function LugarList() {
             getRowId={(row) => `${row.cod_departamento}-${row.cod_provincia}-${row.cod}`}
           />
         )}
-      </Container>
+      {/* </Container> */}
     </>
   );
 }

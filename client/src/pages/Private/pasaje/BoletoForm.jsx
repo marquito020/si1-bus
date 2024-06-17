@@ -60,6 +60,7 @@ export default function BoletoForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("accessToken");
         try {
             setLoading(true);
             console.log({ ...boleto, id_asiento: selectedSeats });
@@ -68,6 +69,7 @@ export default function BoletoForm() {
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({ ...boleto, id_asiento: selectedSeats }),
             });

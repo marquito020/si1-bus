@@ -50,14 +50,11 @@ const createRol = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
-    console.log("req.cookies", req.cookies);
-    console.log("token", token);
-    const accion = `Creación de rol ${nombre}`;
 
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const user = jwt.verify(token, TOKEN_SECRET);
-
-    console.log("user", user);
+    const accion = `Creación de rol ${nombre}`;
 
     await pool.query(
       `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
@@ -96,12 +93,12 @@ const updateRol = async (req, res) => {
       /* Bitacora */
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
-      const { token } = req.cookies;
-      const accion = `Actualizar rol ${id}`;
 
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
       const user = jwt.verify(token, TOKEN_SECRET);
 
-      console.log("user", user);
+      const accion = `Actualizar rol ${id}`;
 
       await pool.query(
         `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
@@ -136,7 +133,8 @@ const deleteRol = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Eliminación de rol con ID ${id}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);

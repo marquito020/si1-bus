@@ -108,7 +108,8 @@ const cancelViaje = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Cancelación de viaje ${cod}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);
@@ -201,7 +202,8 @@ const createViaje = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Creación de viaje ${cod}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);
@@ -309,7 +311,8 @@ const updateViaje = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Actualizar viaje ${cod}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);

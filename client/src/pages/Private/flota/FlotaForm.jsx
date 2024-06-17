@@ -33,6 +33,7 @@ export default function FlotaForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("accessToken");
     try {
       setLoading(true);
       if (placa) {
@@ -40,6 +41,7 @@ export default function FlotaForm() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(flota),
         });
@@ -48,6 +50,7 @@ export default function FlotaForm() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(flota),
         });

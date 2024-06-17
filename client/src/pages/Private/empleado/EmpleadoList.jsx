@@ -26,7 +26,7 @@ export default function EmpleadoList() {
         }
     };
 
-    const handleDelete = async (id) => {
+    /* const handleDelete = async (id) => {
         try {
             await fetch(`${URL_BACKEND}/empleados/${id}`, {
                 method: "DELETE",
@@ -36,7 +36,7 @@ export default function EmpleadoList() {
             console.error('Error deleting empleado:', error);
             setError('Error deleting empleado');
         }
-    };
+    }; */
 
     useEffect(() => {
         loadEmpleados();
@@ -86,7 +86,7 @@ export default function EmpleadoList() {
                     { field: 'apellido', headerName: 'Apellido', width: 150 },
                     { field: 'fecha_nacimiento', headerName: 'Fecha de Nacimiento', width: 150 },
                     { field: 'telefono', headerName: 'Teléfono', width: 150 },
-                    {
+                    /* {
                         field: 'actions',
                         headerName: 'Acciones',
                         width: 150,
@@ -99,7 +99,7 @@ export default function EmpleadoList() {
                                 Eliminar
                             </Button>
                         )
-                    }
+                    } */
                 ]}
             />
         </>

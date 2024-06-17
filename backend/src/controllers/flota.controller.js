@@ -87,6 +87,22 @@ const createFlota = async (req, res) => {
 
       await createAsiento(placa, capacidad);
 
+      /* Bitacora */
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toISOString();
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
+      const accion = `Creación de flota ${placa}`;
+
+      const user = jwt.verify(token, TOKEN_SECRET);
+
+      console.log("user", user);
+
+      await pool.query(
+        `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
+        [fechaFormateada, accion, user.id]
+      );
+
       res.json(insertResult.rows[0]);
     } catch (error) {
       console.log(error);

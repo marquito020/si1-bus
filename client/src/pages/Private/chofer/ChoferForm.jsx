@@ -28,12 +28,14 @@ export default function ChoferForm() {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("accessToken");
       if (editing) {
         await fetch(`${URL_BACKEND}/choferes/${params.id}`, {
           method: "PUT",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(chofer),
         });
@@ -44,6 +46,7 @@ export default function ChoferForm() {
           body: JSON.stringify(chofer),
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
         });
       }

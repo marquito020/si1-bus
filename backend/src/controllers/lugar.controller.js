@@ -92,7 +92,8 @@ const createLugar = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Insertar lugar ${cod_departamento}-${cod_provincia}-${cod}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);
@@ -135,7 +136,8 @@ const updateLugar = async (req, res) => {
     /* Bitacora */
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
     const accion = `Actualizar lugar ${cod_Departamento}-${cod_Provincia}-${cod}`;
 
     const user = jwt.verify(token, TOKEN_SECRET);
@@ -172,7 +174,8 @@ const deleteLugar = async (req, res) => {
       /* Bitacora */
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toISOString();
-      const { token } = req.cookies;
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
       const accion = `Eliminar lugar ${cod_Departamento}-${cod_Provincia}-${cod}`;
 
       const user = jwt.verify(token, TOKEN_SECRET);

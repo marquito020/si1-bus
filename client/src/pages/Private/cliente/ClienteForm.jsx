@@ -29,6 +29,7 @@ export default function ClienteForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("accessToken");
         try {
             setLoading(true);
             const response = await fetch(`${URL_BACKEND}/clientes`, {
@@ -36,6 +37,7 @@ export default function ClienteForm() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(cliente),
             });

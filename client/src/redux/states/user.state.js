@@ -18,7 +18,7 @@ const EmptyUserState = {
 const persistLocalStorageUser = (data) => {
   localStorage.setItem("user", JSON.stringify(data.user));
   localStorage.setItem("accessToken", data.accessToken);
-  document.cookie = `token=${data.accessToken}`;
+  document.cookie = `token=${data.accessToken}; path=/; secure; SameSite=None`;
 };
 
 const clearLocalStorageUser = () => {

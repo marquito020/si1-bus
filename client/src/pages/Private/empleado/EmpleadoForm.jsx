@@ -31,6 +31,7 @@ export default function EmpleadoForm() {
     };
 
     const handleSubmit = async (e) => {
+        const token = localStorage.getItem("accessToken");
         e.preventDefault();
         try {
             setLoading(true);
@@ -39,6 +40,7 @@ export default function EmpleadoForm() {
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(cliente),
             });

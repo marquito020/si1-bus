@@ -39,6 +39,7 @@ export default function ViajeForm() {
     e.preventDefault();
     setLoading(true);
 
+    const token = localStorage.getItem("accessToken");
     try {
       if (editing) {
         await fetch(`${URL_BACKEND}/viajes/${params.cod}`, {
@@ -46,6 +47,7 @@ export default function ViajeForm() {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(viaje),
         });
@@ -57,6 +59,7 @@ export default function ViajeForm() {
             body: JSON.stringify(viaje),
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
             },
           });
         } catch (error) {
