@@ -1,19 +1,26 @@
-import {
-    Button, Card, CardContent, CircularProgress, Grid, Typography, Box, TextField,
-    MenuItem
-} from "@mui/material";
 import { useState, useEffect } from "react";
+import {
+    Button, Card, CardContent, CircularProgress, Grid, Typography, Box, TextField, MenuItem
+} from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { URL_BACKEND } from "../../constants/routes";
 import { useSelector } from "react-redux";
+import {
+    PaymentElement,
+    useStripe,
+    useElements,
+} from '@stripe/react-stripe-js';
 
 export default function BoletoClienteForm() {
+    const stripe = useStripe();
+    const elements = useElements();
     const navigate = useNavigate();
     const { cod } = useParams();
+    const user = useSelector((state) => state.user.id);
     const [boleto, setBoleto] = useState({
         precio: "",
         cod_viaje: "",
-        id_cliente: useSelector((state) => state.user.id),
+        id_cliente: user,
         id_asiento: [],
         id_metodo_pago: "",
     });
@@ -23,22 +30,21 @@ export default function BoletoClienteForm() {
     const [loadingAsientos, setLoadingAsientos] = useState(false);
     const [error, setError] = useState(null);
     const [viaje, setViaje] = useState([]);
-    /* const [cliente, setCliente] = useState([]); */
     const [asientos, setAsiento] = useState([]);
     const [metodoPago, setMetodoPago] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [asientosOcupados, setAsientosOcupados] = useState([]);
+    /* const [errorMessage, setErrorMessage] = useState(''); */
 
     const handleChange = (e) => {
         setBoleto({
             ...boleto,
             [e.target.name]: e.target.value,
         });
-    }
+    };
 
     const handleSelectChange = async (e) => {
         setLoadingAsientos(true);
-        console.log(e.target.value);
         setBoleto({
             ...boleto,
             cod_viaje: e.target.value,
@@ -46,26 +52,119 @@ export default function BoletoClienteForm() {
         });
         await fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setAsiento(data);
-            });
+            .then(data => setAsiento(data));
 
         await fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}/boleto`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setAsientosOcupados(data);
-            });
+            .then(data => setAsientosOcupados(data));
         setLoadingAsientos(false);
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+
+        if (boleto.id_metodo_pago === 2 || boleto.id_metodo_pago === 3) {
+            if (!stripe || !elements) {
+                setError("Stripe.js has not loaded yet.");
+                return;
+            }
+
+            // Call elements.submit() first
+            const { error: submitError } = await elements.submit();
+            if (submitError) {
+                setError(submitError.message);
+                setLoading(false);
+                return;
+            }
+
+            // Fetch client secret
+            const clientSecretResponse = await fetch(`${URL_BACKEND}/create-payment-intent`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount: boleto.precio * 100, // precio en centavos
+                    currency: "usd",
+                }),
+            });
+
+            const { clientSecret } = await clientSecretResponse.json();
+
+            const token = localStorage.getItem("accessToken");
+            try {
+                const response = await fetch(`${URL_BACKEND}/boletos/cliente`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ ...boleto, id_asiento: selectedSeats, clientSecret }),
+                });
+                const data = await response.json();
+                if (response.status === 201) {
+                    const notaVenta = data.nota_venta;
+                    /* navigate("/nota-venta-cliente/" + notaVenta.id); */
+                    // Confirm payment
+                    const { error: confirmError } = await stripe.confirmPayment({
+                        elements,
+                        clientSecret,
+                        confirmParams: {
+                            return_url: `${window.location.origin}/nota-venta-cliente/${notaVenta.id}`,
+                        },
+                    });
+
+                    if (confirmError) {
+                        setError(confirmError.message);
+                        setLoading(false);
+                        return;
+                    }
+                } else {
+                    setError(data.message);
+                }
+            } catch (error) {
+                setError("Error saving boleto");
+            } finally {
+                setLoading(false);
+            }
+
+            setLoading(true);
+            /* await saveBoleto(clientSecret); */
+        } else {
+            /* await saveBoleto(); */
+            setLoading(true);
+            const token = localStorage.getItem("accessToken");
+            try {
+                const response = await fetch(`${URL_BACKEND}/boletos/cliente`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ ...boleto, id_asiento: selectedSeats }),
+                });
+                const data = await response.json();
+                if (response.status === 201) {
+                    const notaVenta = data.nota_venta;
+                    navigate("/nota-venta-cliente/" + notaVenta.id);
+                } else {
+                    setError(data.message);
+                }
+
+            } catch (error) {
+                setError("Error saving boleto");
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+    /* const saveBoleto = async (paymentIntentId) => {
         const token = localStorage.getItem("accessToken");
         try {
-            setLoading(true);
-            console.log({ ...boleto, id_asiento: selectedSeats });
             const response = await fetch(`${URL_BACKEND}/boletos/cliente`, {
                 method: "POST",
                 credentials: "include",
@@ -73,10 +172,9 @@ export default function BoletoClienteForm() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify({ ...boleto, id_asiento: selectedSeats }),
+                body: JSON.stringify({ ...boleto, id_asiento: selectedSeats, paymentIntentId }),
             });
             const data = await response.json();
-            console.log(data);
             if (response.status === 201) {
                 const notaVenta = data.nota_venta;
                 navigate("/nota-venta-cliente/" + notaVenta.id);
@@ -84,12 +182,11 @@ export default function BoletoClienteForm() {
                 setError(data.message);
             }
         } catch (error) {
-            console.error("Error saving boleto:", error);
             setError("Error saving boleto");
         } finally {
             setLoading(false);
         }
-    }
+    }; */
 
     useEffect(() => {
         if (cod) {
@@ -100,12 +197,11 @@ export default function BoletoClienteForm() {
                     const data = await response.json();
                     setBoleto(data);
                 } catch (error) {
-                    console.error("Error loading boleto:", error);
                     setError("Error loading boleto");
                 } finally {
                     setLoadingBoleto(false);
                 }
-            }
+            };
             loadBoleto();
         }
     }, [cod]);
@@ -116,19 +212,10 @@ export default function BoletoClienteForm() {
             .then(data => setViaje(data));
     }, []);
 
-    /* useEffect(() => {
-        fetch(`${URL_BACKEND}/clientes`)
-            .then(res => res.json())
-            .then(data => setCliente(data));
-    }, []); */
-
     useEffect(() => {
         fetch(`${URL_BACKEND}/metodos-pago`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setMetodoPago(data);
-            });
+            .then(data => setMetodoPago(data));
     }, []);
 
     const toggleSeatSelection = (numero) => {
@@ -202,39 +289,23 @@ export default function BoletoClienteForm() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            {/* <TextField
-                                label="Cliente"
-                                name="id_cliente"
-                                select
-                                value={boleto.id_cliente}
-                                onChange={handleChange}
-                                fullWidth
-                                margin="normal"
-                                required
-                            >
-                                {cliente.map((c) => (
-                                    <MenuItem key={c.id} value={c.id}>
-                                        {c.nombre}
-                                    </MenuItem>
-                                ))}
-                            </TextField> */}
+                            {(boleto.id_metodo_pago === 2 || boleto.id_metodo_pago === 3) && (
+                                <Box sx={{ mt: 2 }}>
+                                    <PaymentElement />
+                                </Box>
+                            )}
                             {loadingAsientos ? <CircularProgress /> : (
                                 <Grid container spacing={2}>
-                                    {/* Window on the left side */}
                                     <Grid item xs={1}>
                                         <Typography variant="subtitle1" align="center">
                                             Ventanilla
                                         </Typography>
                                     </Grid>
-
-                                    {/* First Column */}
                                     <Grid item xs={3}>
                                         {asientos.filter((_, index) => index % 3 === 0).map((asiento, index) => (
                                             <Box
                                                 key={index}
-                                                /* onClick={() => toggleSeatSelection(asiento.id)} */
-                                                onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
-                                                    toggleSeatSelection(asiento.id)}
+                                                onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null : toggleSeatSelection(asiento.id)}
                                                 sx={{
                                                     border: "1px solid gray",
                                                     borderRadius: "4px",
@@ -247,30 +318,21 @@ export default function BoletoClienteForm() {
                                                 }}
                                             >
                                                 <Typography variant="h6">Asiento {asiento.numero}</Typography>
-                                                <Typography variant="body1">{
-                                                    asientosOcupados.find((a) => a.id === asiento.id)
-                                                        ? "Ocupado"
-                                                        : "Disponible"
-                                                }</Typography>
+                                                <Typography variant="body1">{asientosOcupados.find((a) => a.id === asiento.id) ? "Ocupado" : "Disponible"}</Typography>
                                             </Box>
                                         ))}
                                     </Grid>
-
-                                    {/* Aisle */}
                                     <Grid item xs={1} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
                                         <Box sx={{ height: "100%", textAlign: "center", padding: "16px" }}>
                                             <Typography variant="h6">Pasillo</Typography>
                                         </Box>
                                     </Grid>
-
-                                    {/* Second and Third Columns */}
                                     <Grid item xs={6}>
                                         <Grid container spacing={2}>
                                             {asientos.filter((_, index) => index % 3 !== 0).map((asiento, index) => (
                                                 <Grid item xs={6} key={index}>
                                                     <Box
-                                                        onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null :
-                                                            toggleSeatSelection(asiento.id)}
+                                                        onClick={() => asientosOcupados.find((a) => a.id === asiento.id) ? null : toggleSeatSelection(asiento.id)}
                                                         sx={{
                                                             border: "1px solid gray",
                                                             borderRadius: "4px",
@@ -289,8 +351,6 @@ export default function BoletoClienteForm() {
                                             ))}
                                         </Grid>
                                     </Grid>
-
-                                    {/* Window on the right side */}
                                     <Grid item xs={1}>
                                         <Typography variant="subtitle1" align="center">
                                             Ventanilla

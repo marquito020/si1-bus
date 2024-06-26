@@ -56,11 +56,13 @@ const createRol = async (req, res) => {
     const user = jwt.verify(token, TOKEN_SECRET);
     const accion = `Creación de rol ${nombre}`;
 
-    const ip = req.ip;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null;
+    const ipArray = ip.split(',').map(item => item.trim());
+    const clientIp = ipArray[0]; // La primera IP en la lista es la IP real del cliente
 
     await pool.query(
       `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario, ip) VALUES ($1, $2, $3, $4)`,
-      [fechaFormateada, accion, user.id, ip]
+      [fechaFormateada, accion, user.id, clientIp]
     );
     res.json(result.rows[0]);
   } catch (error) {

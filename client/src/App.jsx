@@ -106,12 +106,6 @@ function App() {
               element={<Private />}
             />
           </Route>
-          {/* <Route element={<Authenticate />}>
-            <Route
-              path={`${PrivateRoutes.PRIVATE}/*`}
-              element={<PrivateCliente />}
-            />
-          </Route> */}
         </Routes>
       </BrowserRouter>
     </Provider>

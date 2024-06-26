@@ -27,11 +27,18 @@ app.use(
   cors({
     /* origin: "https://7baf-181-41-146-171.ngrok-free.app", */
     /* origin: "https://si1-bus.onrender.com", */
-    origin: ["http://localhost:5173", "https://7baf-181-41-146-171.ngrok-free.app", "https://si1-bus.onrender.com"],
+    origin: [
+      "http://localhost:5173",
+      "https://7baf-181-41-146-171.ngrok-free.app",
+      "https://si1-bus.onrender.com",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+
+app.set("trust proxy", true);
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
@@ -52,5 +59,28 @@ app.use("/api", notaVentaRoute);
 app.use("/api", metodoPagoRoute);
 app.use("/api", rolRoute);
 app.use("/api", bitacoraRoutes);
+
+const Stripe = require("stripe");
+const stripe = Stripe(
+  "sk_test_51NSaJVFjDDiJWQdFwuVodFucfIyb1Maz9CH2YUpkgEs5YGScROlPFTufV4Rp4Rho2gM0FKQkxQvQsxkPZzspFSNf00HbJej826"
+);
+
+app.use("/api/create-payment-intent", async (req, res) => {
+  const { amount } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100, // cantidad en centavos
+      currency: "usd",
+    });
+
+    console.log("paymentIntent", paymentIntent);
+    console.log("paymentIntent.client_secret", paymentIntent.client_secret);
+
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = app;
