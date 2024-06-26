@@ -2,7 +2,7 @@ import { Box, Paper, Typography, Grid } from "@mui/material";
 import LoginForm from '../components/LoginForm';
 import post from '../assets/post.png';
 
-function Login() {
+function LoginAdmin() {
     return (
         <Box
             sx={{
@@ -67,4 +67,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default LoginAdmin;

@@ -60,7 +60,8 @@ export default function BitacoraList() {
         bitacora.nombre_usuario.toLowerCase().includes(searchTerm.toLowerCase()) ||
         bitacora.apellido_usuario.toLowerCase().includes(searchTerm.toLowerCase()) ||
         bitacora.ci_usuario.toString().includes(searchTerm) ||
-        bitacora.accion.toLowerCase().includes(searchTerm.toLowerCase())
+        bitacora.accion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bitacora.ip.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -94,7 +95,9 @@ export default function BitacoraList() {
                         { field: 'nombre_usuario', headerName: 'Nombre', width: 150 },
                         { field: 'apellido_usuario', headerName: 'Apellido', width: 150 },
                         { field: 'ci_usuario', headerName: 'CI', width: 150 },
-                        { field: 'accion', headerName: 'Acción', width: 550 },
+                        { field: 'accion', headerName: 'Acción', width: 350 },
+                        /* ip */
+                        { field: 'ip', headerName: 'IP', width: 250 }
                     ]}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10, 20]}

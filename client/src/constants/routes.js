@@ -63,6 +63,11 @@ export const PrivateRoutes = {
   BITACORAS: "/bitacoras",
 
   HOME: "/home",
+
+  /* CLiente */
+  HOME_CLIENTE: "/home-cliente",
+  BOLETOS_CLIENTE: "/boleto-cliente",
+  NOTAS_VENTA_CLIENTE: "/nota-venta-cliente/:id",
 };
 
 //url backend

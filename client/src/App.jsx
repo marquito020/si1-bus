@@ -83,11 +83,13 @@ import 'primeflex/primeflex.css';
 /* import { Container } from "@mui/material"; */
 import { Provider } from "react-redux";
 
-import Login from './pages/Login'
+import LoginAdmin from './pages/LoginAdmin'
+import LandingPage from "./pages/Landing";
 import { store } from "./redux/store";
 import Authenticate from "./guards/Authenticate";
 import { PrivateRoutes } from "./constants/routes";
 import Private from "./pages/Private/Private";
+import LoginCliente from "./pages/LoginCliente";
 /* import Navbar from "./components/DefaultLayout"; */
 
 function App() {
@@ -95,14 +97,21 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route index path="/" element={<Login />} />
-          <Route index path="/login" element={<Login />} />
+          <Route index path="/" element={<LandingPage />} />
+          <Route index path="/login" element={<LoginCliente />} />
+          <Route index path="/admin/login" element={<LoginAdmin />} />
           <Route element={<Authenticate />}>
             <Route
               path={`${PrivateRoutes.PRIVATE}/*`}
               element={<Private />}
             />
           </Route>
+          {/* <Route element={<Authenticate />}>
+            <Route
+              path={`${PrivateRoutes.PRIVATE}/*`}
+              element={<PrivateCliente />}
+            />
+          </Route> */}
         </Routes>
       </BrowserRouter>
     </Provider>

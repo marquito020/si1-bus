@@ -11,6 +11,7 @@ const getBitacora = async (req, res) => {
         bit.fecha_hora,
         bit.accion,
         bit.id_usuario,
+        bit.ip,
         per.nombre as nombre_usuario,
         per.apellido as apellido_usuario,
         per.ci as ci_usuario

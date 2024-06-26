@@ -41,6 +41,8 @@ const {
   dropBoleto,
   tableNotaVenta,
   tableBitacora,
+  addEmailPasswordCliente,
+  addIPBitacora,
 } = require("./seeders/database");
 
 //postgres://bus_si1_user:QQRPNWgyC7NNfJRIvuK29Cqu4hS1JlWz@dpg-cpg3jkdds78s73b5qid0-a.oregon-postgres.render.com/bus_si1
@@ -94,6 +96,8 @@ const seeders = [
   /* dropBoleto */
   /* tableNotaVenta */
   /* tableBitacora, */
+  /* addEmailPasswordCliente, */
+  /* addIPBitacora, */
 ];
 
 pool.connect((err, client, done) => {

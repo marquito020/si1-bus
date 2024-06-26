@@ -37,6 +37,13 @@ const NotaVentaView = lazy(() => import('./nota_venta/NotaVentaView'));
 
 const BitacoraList = lazy(() => import('./bitacora/BitacoraList'));
 
+
+import DefaultLayoutClient from "../../components/DefaultLayoutClient";
+
+const HomeCliente = lazy(() => import('./../Client/Home'));
+const BoletoClienteForm = lazy(() => import('./../Client/BoletoClienteForm'));
+const NotaVentaClienteView = lazy(() => import('./../Client/NotaVentaClienteView'));
+
 function Private() {
     return (
         <Routes>
@@ -223,6 +230,23 @@ function Private() {
                 <Route path={PrivateRoutes.BITACORAS} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <BitacoraList />
+                    </Suspense>
+                } />
+            </Route>
+            <Route element={<DefaultLayoutClient />}>
+                <Route path={PrivateRoutes.HOME_CLIENTE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <HomeCliente />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.BOLETOS_CLIENTE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <BoletoClienteForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.NOTAS_VENTA_CLIENTE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <NotaVentaClienteView />
                     </Suspense>
                 } />
             </Route>

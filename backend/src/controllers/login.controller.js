@@ -64,4 +64,48 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login };
+/* Login Cliente */
+const loginCliente = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+
+    const user = await pool.query("SELECT * FROM public.cliente WHERE email = $1", [
+      email,
+    ]);
+
+    console.log("user", user.rows[0]);
+
+    if (user.rowCount === 0) {
+      return res
+        .status(401)
+        .json({ error: "Usuario o contraseña incorrectos." });
+    }
+
+    const validPassword = user.rows[0].password === password;
+
+    if (!validPassword) {
+      return res
+        .status(401)
+        .json({ error: "Usuario o contraseña incorrectos." });
+    }
+
+    const accessToken = await createAccessToken({
+      email: user.rows[0].email,
+      id: user.rows[0].id,
+    });
+
+    res.json({
+      accessToken,
+      user: {
+        email: user.rows[0].email,
+        id: user.rows[0].id_persona,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { login, loginCliente };

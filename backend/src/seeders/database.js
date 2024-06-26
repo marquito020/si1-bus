@@ -387,6 +387,16 @@ CREATE TABLE Bitacora(
 );
 `;
 
+const addEmailPasswordCliente = `
+ALTER TABLE Cliente
+ADD password VARCHAR(255);
+`;
+
+const addIPBitacora = `
+ALTER TABLE Bitacora
+ADD IP VARCHAR(30);
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -427,4 +437,6 @@ module.exports = {
   dropBoleto,
   tableNotaVenta,
   tableBitacora,
+  addEmailPasswordCliente,
+  addIPBitacora,
 };

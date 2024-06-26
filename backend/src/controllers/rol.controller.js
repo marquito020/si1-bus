@@ -56,9 +56,11 @@ const createRol = async (req, res) => {
     const user = jwt.verify(token, TOKEN_SECRET);
     const accion = `Creación de rol ${nombre}`;
 
+    const ip = req.ip;
+
     await pool.query(
-      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
-      [fechaFormateada, accion, user.id]
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario, ip) VALUES ($1, $2, $3, $4)`,
+      [fechaFormateada, accion, user.id, ip]
     );
     res.json(result.rows[0]);
   } catch (error) {
