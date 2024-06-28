@@ -1,23 +1,15 @@
 import { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { PanelMenu } from "primereact/panelmenu";
-import { /* Link,  */Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { AppBar, Container, Toolbar, Typography, Button as MuiButton, Box, Avatar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { resetUser } from "../redux/states/user.state";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
-/* import UserIcon from '@mui/icons-material/Person';
-import PaymentIcon from '@mui/icons-material/Payment';
-import FunctionIcon from '@mui/icons-material/Functions';
-import RoleIcon from '@mui/icons-material/Group';
-import FlotaIcon from '@mui/icons-material/AirportShuttle';
-import DriverIcon from '@mui/icons-material/DriveEta';
-import TravelIcon from '@mui/icons-material/FlightTakeoff';
-import PlaceIcon from '@mui/icons-material/Place';
-import TicketIcon from '@mui/icons-material/ConfirmationNumber';
-import NoteIcon from '@mui/icons-material/Note'; */
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import EventIcon from '@mui/icons-material/Event';
 
 const theme = createTheme({
   palette: {
@@ -49,84 +41,16 @@ const DefaultLayout = () => {
   };
 
   const items = [
-    /* {
-      label: "Gestión de Usuarios",
-      icon: <UserIcon />,
-      items: [
-        {
-          label: <Link to="/empleados" style={{ textDecoration: 'none', color: 'inherit' }}>Empleados</Link>,
-          icon: <UserIcon />
-        },
-        {
-          label: <Link to="/clientes" style={{ textDecoration: 'none', color: 'inherit' }}>Clientes</Link>,
-          icon: <UserIcon />
-        },
-        {
-          label: <Link to="/roles" style={{ textDecoration: 'none', color: 'inherit' }}>Roles</Link>,
-          icon: <RoleIcon />
-        },
-        {
-          label: <Link to="/funcionalidades" style={{ textDecoration: 'none', color: 'inherit' }}>Funcionalidades</Link>,
-          icon: <FunctionIcon />
-        },
-      ],
-    },
+    // Compras
     {
-      label: "Gestión de Flota",
-      icon: <FlotaIcon />,
-      items: [
-        {
-          label: <Link to="/flotas" style={{ textDecoration: 'none', color: 'inherit' }}>Flotas</Link>,
-          icon: <FlotaIcon />
-        },
-        {
-          label: <Link to="/choferes" style={{ textDecoration: 'none', color: 'inherit' }}>Choferes</Link>,
-          icon: <DriverIcon />
-        },
-      ],
+      label: <Link to="/compras" style={{ textDecoration: 'none', color: 'inherit' }}>Compras</Link>,
+      icon: <ShoppingCartIcon />
     },
+    // Reservas
     {
-      label: "Gestión de Viajes",
-      icon: <TravelIcon />,
-      items: [
-        {
-          label: <Link to="/viajes" style={{ textDecoration: 'none', color: 'inherit' }}>Viajes</Link>,
-          icon: <TravelIcon />
-        },
-        {
-          label: <Link to="/lugares" style={{ textDecoration: 'none', color: 'inherit' }}>Lugares</Link>,
-          icon: <PlaceIcon />
-        },
-      ],
+      label: <Link to="/reservas" style={{ textDecoration: 'none', color: 'inherit' }}>Reservas</Link>,
+      icon: <EventIcon />
     },
-    {
-      label: "Gestión de Ventas",
-      icon: <TicketIcon />,
-      items: [
-        {
-          label: <Link to="/boletos" style={{ textDecoration: 'none', color: 'inherit' }}>Boletos</Link>,
-          icon: <TicketIcon />
-        },
-        {
-          label: <Link to="/notas-venta" style={{ textDecoration: 'none', color: 'inherit' }}>Notas de Venta</Link>,
-          icon: <NoteIcon />
-        },
-        {
-          label: <Link to="/metodos-pago" style={{ textDecoration: 'none', color: 'inherit' }}>Métodos de Pago</Link>,
-          icon: <PaymentIcon />
-        },
-      ],
-    },
-    {
-      label: "Bitácora",
-      icon: <NoteIcon />,
-      items: [
-        {
-          label: <Link to="/bitacoras" style={{ textDecoration: 'none', color: 'inherit' }}>Bitácora</Link>,
-          icon: <NoteIcon />
-        },
-      ],
-    } */
   ];
 
   return (
@@ -170,7 +94,7 @@ const DefaultLayout = () => {
             sx={{ width: 80, height: 80, marginBottom: 2 }}
           />
           <Typography variant="h6" sx={{ textAlign: 'center' }}>
-            {user?.email || user?.username}
+            {user?.user?.email || user?.email}
           </Typography>
         </Box>
         <PanelMenu model={items} />

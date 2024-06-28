@@ -21,6 +21,8 @@ const provinciaRoutes = require("./routes/provincia.routes");
 
 const bitacoraRoutes = require("./routes/bitacora.routes");
 
+const reservaRoutes = require("./routes/reserva.routes");
+
 const app = express();
 
 app.use(
@@ -59,6 +61,7 @@ app.use("/api", notaVentaRoute);
 app.use("/api", metodoPagoRoute);
 app.use("/api", rolRoute);
 app.use("/api", bitacoraRoutes);
+app.use("/api", reservaRoutes);
 
 const Stripe = require("stripe");
 const stripe = Stripe(

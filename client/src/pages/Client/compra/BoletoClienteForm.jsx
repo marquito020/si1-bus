@@ -3,7 +3,7 @@ import {
     Button, Card, CardContent, CircularProgress, Grid, Typography, Box, TextField, MenuItem
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { URL_BACKEND } from "../../constants/routes";
+import { URL_BACKEND } from "../../../constants/routes";
 import { useSelector } from "react-redux";
 import {
     PaymentElement,
@@ -101,7 +101,7 @@ export default function BoletoClienteForm() {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ ...boleto, id_asiento: selectedSeats, clientSecret }),
+                    body: JSON.stringify({ ...boleto, id_asiento: selectedSeats/* , clientSecret */ }),
                 });
                 const data = await response.json();
                 if (response.status === 201) {
@@ -144,7 +144,7 @@ export default function BoletoClienteForm() {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ ...boleto, id_asiento: selectedSeats }),
+                    body: JSON.stringify({ ...boleto, id_asiento: selectedSeats/* , clientSecret */ }),
                 });
                 const data = await response.json();
                 if (response.status === 201) {
@@ -155,6 +155,7 @@ export default function BoletoClienteForm() {
                 }
 
             } catch (error) {
+                console.error("Error saving boleto:", error);
                 setError("Error saving boleto");
             } finally {
                 setLoading(false);

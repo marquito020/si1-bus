@@ -1,7 +1,5 @@
 const pool = require("../db");
-const { v4: uuidv4 } = require("uuid");
-const jwt = require("jsonwebtoken");
-const { TOKEN_SECRET } = require("../config");
+const { createAccessToken } = require("../libs/jwt");
 
 const tabla = "Cliente";
 const orden = "id_persona";
@@ -37,12 +35,21 @@ const getCliente = async (req, res) => {
 };
 
 const createCliente = async (req, res) => {
-  const { nombre, apellido, ci, fecha_nacimiento, telefono } = req.body;
+  const { nombre, apellido, ci, fecha_nacimiento, telefono, email, password } =
+    req.body;
 
   console.log(req.body);
 
   try {
-    if (!nombre || !apellido || !ci || !fecha_nacimiento || !telefono) {
+    if (
+      !nombre ||
+      !apellido ||
+      !ci ||
+      !fecha_nacimiento ||
+      !telefono ||
+      !email ||
+      !password
+    ) {
       return res
         .status(400)
         .json({ error: "Todos los campos son obligatorios." });
@@ -69,12 +76,13 @@ const createCliente = async (req, res) => {
 
     const personaId = insertPersona.rows[0].id;
 
-    await pool.query(`INSERT INTO cliente (id_persona) VALUES ($1)`, [
-      personaId,
-    ]);
+    await pool.query(
+      `INSERT INTO cliente (id_persona, email, password) VALUES ($1, $2, $3)`,
+      [personaId, email, password]
+    );
 
     /* Bitacora */
-    const fechaActual = new Date();
+    /* const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString();
     const { authorization } = req.headers;
     const token = authorization.split(" ")[1];
@@ -87,17 +95,15 @@ const createCliente = async (req, res) => {
     await pool.query(
       `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
       [fechaFormateada, accion, user.id]
-    );
+    ); */
+
+    const accessToken = createAccessToken({ id: personaId, email: email });
 
     res.json({
-      message: "Cliente creado correctamente",
-      cliente: {
+      accessToken,
+      user: {
         id: personaId,
-        nombre,
-        apellido,
-        ci,
-        fecha_nacimiento,
-        telefono,
+        email,
       },
     });
   } catch (error) {

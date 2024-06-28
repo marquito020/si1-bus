@@ -90,6 +90,7 @@ import Authenticate from "./guards/Authenticate";
 import { PrivateRoutes } from "./constants/routes";
 import Private from "./pages/Private/Private";
 import LoginCliente from "./pages/LoginCliente";
+import RegisterCliente from "./pages/RegisterCliente";
 /* import Navbar from "./components/DefaultLayout"; */
 
 function App() {
@@ -99,6 +100,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<LandingPage />} />
           <Route index path="/login" element={<LoginCliente />} />
+          <Route index path="/register" element={<RegisterCliente />} />
           <Route index path="/admin/login" element={<LoginAdmin />} />
           <Route element={<Authenticate />}>
             <Route

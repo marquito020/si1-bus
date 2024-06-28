@@ -40,9 +40,16 @@ const BitacoraList = lazy(() => import('./bitacora/BitacoraList'));
 
 import DefaultLayoutClient from "../../components/DefaultLayoutClient";
 
-const HomeCliente = lazy(() => import('./../Client/Home'));
-const BoletoClienteForm = lazy(() => import('./../Client/BoletoClienteForm'));
-const NotaVentaClienteView = lazy(() => import('./../Client/NotaVentaClienteView'));
+const CompraCliente = lazy(() => import('../Client/compra/CompraCliente'));
+
+const BoletoClienteForm = lazy(() => import('../Client/compra/BoletoClienteForm'));
+const BoletoClienteView = lazy(() => import('../Client/compra/BoletoClienteView'));
+
+const NotaVentaClienteView = lazy(() => import('../Client/compra/NotaVentaClienteView'));
+
+const Reservas = lazy(() => import('../Client/reserva/ReservaCliente'));
+const ReservaForm = lazy(() => import('../Client/reserva/ReservaClienteForm'));
+const ReservaView = lazy(() => import('../Client/reserva/ReservaClienteView'));
 
 function Private() {
     return (
@@ -234,9 +241,9 @@ function Private() {
                 } />
             </Route>
             <Route element={<DefaultLayoutClient />}>
-                <Route path={PrivateRoutes.HOME_CLIENTE} element={
+                <Route path={PrivateRoutes.COMPRAS} element={
                     <Suspense fallback={<div>Loading...</div>}>
-                        <HomeCliente />
+                        <CompraCliente />
                     </Suspense>
                 } />
                 <Route path={PrivateRoutes.BOLETOS_CLIENTE} element={
@@ -244,9 +251,29 @@ function Private() {
                         <BoletoClienteForm />
                     </Suspense>
                 } />
+                <Route path={PrivateRoutes.BOLETOS_CLIENTE_VIEW} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <BoletoClienteView />
+                    </Suspense>
+                } />
                 <Route path={PrivateRoutes.NOTAS_VENTA_CLIENTE} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <NotaVentaClienteView />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.RESERVAS} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Reservas />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.RESERVAS_CREATE} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ReservaForm />
+                    </Suspense>
+                } />
+                <Route path={PrivateRoutes.RESERVAS_VIEW} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <ReservaView />
                     </Suspense>
                 } />
             </Route>

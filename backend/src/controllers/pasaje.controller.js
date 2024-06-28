@@ -174,7 +174,7 @@ const getBoletoCliente = async (req, res) => {
       JOIN ${tablaViaje} via ON bol.cod_viaje = via.cod
       JOIN public.persona per ON bol.id_cliente = per.id
       JOIN public.asiento asie ON bol.id_asiento = asie.id
-      WHERE bol.id_cliente = $1
+      WHERE bol.id_cliente = $1 AND bol.id_nota_venta IS NOT NULL
       ORDER BY bol.fecha DESC`,
       [id_cliente]
     );
@@ -216,7 +216,7 @@ const createBoletoCliente = async (req, res) => {
       const notaVenta = await client.query(
         `INSERT INTO public.nota_venta (fecha, precio_total, id_cliente, id_metodo_pago)
             VALUES ($1, $2, $3, $4) RETURNING *`,
-        [new Date(), totalPrecio, id_cliente, 1]
+        [new Date(), totalPrecio, id_cliente, id_metodo_pago]
       );
 
       for (let i = 0; i < id_asiento.length; i++) {

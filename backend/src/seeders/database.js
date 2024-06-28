@@ -397,6 +397,26 @@ ALTER TABLE Bitacora
 ADD IP VARCHAR(30);
 `;
 
+const tableReserva = `CREATE TABLE Reserva(
+    id SERIAL PRIMARY KEY,
+    fecha DATE NOT NULL,
+    precio FLOAT NOT NULL,
+    cod_viaje VARCHAR(8) NOT NULL,
+    id_cliente INT NOT NULL,
+    id_asiento INT NOT NULL,
+    FOREIGN KEY (cod_viaje) REFERENCES viaje(cod) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_persona) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_asiento) REFERENCES asiento(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+`;
+
+const addEstadoCodReserva = `
+ALTER TABLE Boleto
+ADD COLUMN estado VARCHAR(20) DEFAULT 'COMPRADO',
+ADD COLUMN id_reserva INT,
+ADD FOREIGN KEY (id_reserva) REFERENCES reserva(id) ON UPDATE CASCADE ON DELETE CASCADE;
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -439,4 +459,6 @@ module.exports = {
   tableBitacora,
   addEmailPasswordCliente,
   addIPBitacora,
+  tableReserva,
+  addEstadoCodReserva,
 };

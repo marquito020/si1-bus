@@ -1,22 +1,22 @@
 import { Button, Toolbar, Box, AppBar, Container, TextField, Alert } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { URL_BACKEND } from "../../constants/routes";
+import { URL_BACKEND } from "../../../constants/routes";
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from "react-redux";
 
-export default function HomeCliente() {
+export default function CompraCliente() {
     const navigate = useNavigate();
     const [boletas, setBoletas] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const user = useSelector((state) => state.user);
 
     const loadBoletas = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${URL_BACKEND}/boletos/cliente/${user.id}`);
+            const response = await fetch(`${URL_BACKEND}/boletos/cliente/${user.id || user.user.id}`);
             const data = await response.json();
             console.log(data);
             setBoletas(data.map(boleto => ({
@@ -32,7 +32,7 @@ export default function HomeCliente() {
         }
     };
 
-    const handleDelete = async (id) => {
+    /* const handleDelete = async (id) => {
         try {
             await fetch(`${URL_BACKEND}/boletos/${id}`, {
                 method: "DELETE",
@@ -42,41 +42,52 @@ export default function HomeCliente() {
             console.error('Error deleting boleto:', error);
             setError('Error deleting boleto');
         }
-    };
+    }; */
 
-    useEffect(() => {
+    useEffect(() => async () =>{
         loadBoletas();
     }, []);
 
     const filteredBoletas = boletas.filter((boleto) =>
-        boleto.id.toString().includes(searchTerm)
+        boleto.id.toString().includes(searchTerm) ||
+        boleto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        boleto.fecha.includes(searchTerm) ||
+        boleto.hora_salida.includes(searchTerm) ||
+        boleto.hora_llegada.includes(searchTerm) ||
+        boleto.placa_flota.includes(searchTerm) ||
+        boleto.numero.includes(searchTerm) ||
+        boleto.precio.toString().includes(searchTerm)
     );
 
     return (
         <>
             <Box sx={{ flexFlow: 1 }}>
-                <AppBar position="static" color="primary">
+                <AppBar position="static" color="primary" sx={
+                    {
+                        borderRadius: 1,
+                    }
+                }>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => navigate('/boleto-cliente')}
+                    >
+                        Comprar boleto
+                    </Button>
                     <Container>
                         <Toolbar>
                             <TextField
                                 variant="outlined"
-                                placeholder="Buscar por Código"
+                                placeholder="Buscar boleta..."
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 value={searchTerm}
                                 sx={{
                                     backgroundColor: 'white',
                                     borderRadius: 1,
                                     mr: 2,
-                                    width: { xs: '100%', sm: 'auto' }
+                                    width: '100%',
                                 }}
                             />
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => navigate('/boleto-cliente')}
-                            >
-                                Nuevo
-                            </Button>
                         </Toolbar>
                     </Container>
                 </AppBar>
@@ -107,18 +118,18 @@ export default function HomeCliente() {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={() => navigate(`/boletos/${params.row.id}`)}
+                                        onClick={() => navigate(`/boleto-cliente/${params.row.id}`)}
                                         style={{ marginRight: 8 }}
                                     >
                                         Ver
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         variant="contained"
                                         color="error"
                                         onClick={() => handleDelete(params.row.id)}
                                     >
                                         Eliminar
-                                    </Button>
+                                    </Button> */}
                                 </>
                             ),
                         },

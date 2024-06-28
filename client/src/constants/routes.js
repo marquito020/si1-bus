@@ -65,9 +65,13 @@ export const PrivateRoutes = {
   HOME: "/home",
 
   /* CLiente */
-  HOME_CLIENTE: "/home-cliente",
+  COMPRAS: "/compras",
   BOLETOS_CLIENTE: "/boleto-cliente",
+  BOLETOS_CLIENTE_VIEW: "/boleto-cliente/:id",
   NOTAS_VENTA_CLIENTE: "/nota-venta-cliente/:id",
+  RESERVAS: "/reservas",
+  RESERVAS_CREATE: "/reservas" + PublicRoutes.CREAR,
+  RESERVAS_VIEW: "/reservas/:id",
 };
 
 //url backend

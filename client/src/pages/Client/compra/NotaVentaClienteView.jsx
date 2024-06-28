@@ -3,7 +3,7 @@ import {
     Button, Card, CardContent, CircularProgress, Grid, Typography, Box, Alert
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { URL_BACKEND } from "../../constants/routes";
+import { URL_BACKEND } from "../../../constants/routes";
 import { PDFDocument, rgb } from 'pdf-lib';
 
 export default function NotaVentaView() {
@@ -118,7 +118,7 @@ export default function NotaVentaView() {
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => navigate('/home-cliente')}
+                                onClick={() => navigate('/compras')}
                             >
                                 Volver
                             </Button>
