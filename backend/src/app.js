@@ -1,3 +1,4 @@
+process.env.TZ = 'America/La_Paz';
 const express = require("express");
 const pool = require("pg");
 const morgan = require("morgan");

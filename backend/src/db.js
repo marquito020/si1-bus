@@ -45,6 +45,7 @@ const {
   addIPBitacora,
   tableReserva,
   addEstadoCodReserva,
+  addClienteBitacora,
 } = require("./seeders/database");
 
 //postgres://bus_si1_user:QQRPNWgyC7NNfJRIvuK29Cqu4hS1JlWz@dpg-cpg3jkdds78s73b5qid0-a.oregon-postgres.render.com/bus_si1
@@ -57,6 +58,10 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: false,
   },
+  // Asegúrate de configurar la zona horaria para cada cliente conectado
+/*   connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000,
+  max: 20 */
 });
 
 const seeders = [
@@ -102,7 +107,13 @@ const seeders = [
   /* addIPBitacora, */
   /* tableReserva */
   /* addEstadoCodReserva, */
+  /* addClienteBitacora */
 ];
+pool.on('connect', client => {
+  client.query('SET TIME ZONE "America/La_Paz"')
+    .then(response => console.log("Zona horaria configurada para la sesión"))
+    .catch(e => console.error("Error configurando la zona horaria en la sesión", e));
+});
 
 pool.connect((err, client, done) => {
   if (err) {
@@ -118,5 +129,6 @@ pool.connect((err, client, done) => {
     });
   }
 });
+
 
 module.exports = pool;

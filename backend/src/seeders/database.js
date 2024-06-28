@@ -417,6 +417,15 @@ ADD COLUMN id_reserva INT,
 ADD FOREIGN KEY (id_reserva) REFERENCES reserva(id) ON UPDATE CASCADE ON DELETE CASCADE;
 `;
 
+const addClienteBitacora = `
+ALTER TABLE Bitacora
+ADD COLUMN id_persona INT;
+
+ALTER TABLE Bitacora
+ADD CONSTRAINT fk_bitacora_persona
+FOREIGN KEY (id_persona) REFERENCES Cliente(id_persona) ON UPDATE CASCADE ON DELETE CASCADE;
+`;
+
 module.exports = {
   tableSeeder,
   personSeeder,
@@ -461,4 +470,5 @@ module.exports = {
   addIPBitacora,
   tableReserva,
   addEstadoCodReserva,
+  addClienteBitacora,
 };

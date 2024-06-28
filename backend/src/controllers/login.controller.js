@@ -1,6 +1,7 @@
 const pool = require("../db");
 const { loginSchema } = require("../schemas/auth.schema");
 const { createAccessToken } = require("../libs/jwt");
+const moment = require('moment-timezone');
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -36,13 +37,14 @@ const login = async (req, res) => {
     });
 
     /* Bitacora */
-    const fechaActual = new Date();
-    const fechaFormateada = fechaActual.toISOString();
+    const fechaActual = moment.tz("America/La_Paz").format();
+    console.log("fechaActual con Moment:", fechaActual);
+    /* const fechaFormateada = fechaActual.toISOString(); */
     const accion = `inicio sesion`;
 
     await pool.query(
       `INSERT INTO public.bitacora (fecha_hora, accion, id_usuario) VALUES ($1, $2, $3)`,
-      [fechaFormateada, accion, user.rows[0].id_persona]
+      [fechaActual, accion, user.rows[0].id_persona]
     );
 
     res.cookie("token", accessToken, {
@@ -69,10 +71,10 @@ const loginCliente = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-
-    const user = await pool.query("SELECT * FROM public.cliente WHERE email = $1", [
-      email,
-    ]);
+    const user = await pool.query(
+      "SELECT * FROM public.cliente WHERE email = $1",
+      [email]
+    );
 
     console.log("user", user.rows[0]);
 
@@ -93,6 +95,22 @@ const loginCliente = async (req, res) => {
     const accessToken = await createAccessToken({
       email: user.rows[0].email,
       id: user.rows[0].id,
+    });
+
+    /* Bitacora */
+    const fechaActual = moment.tz("America/La_Paz").format();
+    /* const fechaFormateada = fechaActual.toISOString(); */
+    const accion = `Inicio sesion de cliente`;
+
+    await pool.query(
+      `INSERT INTO public.bitacora (fecha_hora, accion, id_persona) VALUES ($1, $2, $3)`,
+      [fechaActual, accion, user.rows[0].id_persona]
+    );
+
+    res.cookie("token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
 
     res.json({

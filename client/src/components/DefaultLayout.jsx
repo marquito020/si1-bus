@@ -45,7 +45,7 @@ const DefaultLayout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem(user);
     dispatch(resetUser());
-    window.location.href = "/login";
+    window.location.href = "/admin/login";
   };
 
   const items = [
