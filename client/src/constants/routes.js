@@ -72,8 +72,9 @@ export const PrivateRoutes = {
   RESERVAS: "/reservas",
   RESERVAS_CREATE: "/reservas" + PublicRoutes.CREAR,
   RESERVAS_VIEW: "/reservas/:id",
+  NOTAS_VENTA_CLIENTE_LIST: "/nota-venta-cliente",
 };
 
 //url backend
-/* export const URL_BACKEND = "http://localhost:4000/api" */
-export const URL_BACKEND = "https://si1-bus-back.onrender.com/api";
+export const URL_BACKEND = "http://localhost:4000/api"
+/* export const URL_BACKEND = "https://si1-bus-back.onrender.com/api"; */

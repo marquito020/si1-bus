@@ -51,6 +51,11 @@ const DefaultLayout = () => {
       label: <Link to="/reservas" style={{ textDecoration: 'none', color: 'inherit' }}>Reservas</Link>,
       icon: <EventIcon />
     },
+    //Nota de Venta
+    {
+      label: <Link to="/nota-venta-cliente" style={{ textDecoration: 'none', color: 'inherit' }}>Nota de Venta</Link>,
+      icon: <EventIcon />
+    },
   ];
 
   return (

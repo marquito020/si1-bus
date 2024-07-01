@@ -34,7 +34,7 @@ app.use(
       "http://localhost:5173",
       "https://7baf-181-41-146-171.ngrok-free.app",
       "https://si1-bus.onrender.com",
-      "https://569f-181-41-146-171.ngrok-free.app"
+      "https://888e-181-41-146-164.ngrok-free.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,

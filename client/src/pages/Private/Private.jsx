@@ -45,11 +45,14 @@ const CompraCliente = lazy(() => import('../Client/compra/CompraCliente'));
 const BoletoClienteForm = lazy(() => import('../Client/compra/BoletoClienteForm'));
 const BoletoClienteView = lazy(() => import('../Client/compra/BoletoClienteView'));
 
-const NotaVentaClienteView = lazy(() => import('../Client/compra/NotaVentaClienteView'));
+const NotaVentaClienteView = lazy(() => import('../Client/nota_venta/NotaVentaClienteView'));
 
 const Reservas = lazy(() => import('../Client/reserva/ReservaCliente'));
 const ReservaForm = lazy(() => import('../Client/reserva/ReservaClienteForm'));
 const ReservaView = lazy(() => import('../Client/reserva/ReservaClienteView'));
+
+//Nota de Venta
+const NotaVentaClienteList = lazy(() => import('../Client/nota_venta/NotaVentaClienteList'));
 
 function Private() {
     return (
@@ -274,6 +277,13 @@ function Private() {
                 <Route path={PrivateRoutes.RESERVAS_VIEW} element={
                     <Suspense fallback={<div>Loading...</div>}>
                         <ReservaView />
+                    </Suspense>
+                } />
+
+                {/* Nota Venta */}
+                <Route path={PrivateRoutes.NOTAS_VENTA_CLIENTE_LIST} element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <NotaVentaClienteList />
                     </Suspense>
                 } />
             </Route>

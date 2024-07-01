@@ -118,7 +118,7 @@ export default function NotaVentaView() {
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => navigate('/compras')}
+                                onClick={() => navigate('/nota-venta-cliente')}
                             >
                                 Volver
                             </Button>

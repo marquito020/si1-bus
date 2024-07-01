@@ -41,6 +41,7 @@ export default function BoletoForm() {
         setBoleto({
             ...boleto,
             cod_viaje: e.target.value,
+            precio: viaje.find((v) => v.cod === e.target.value).precio,
         });
         await fetch(`${URL_BACKEND}/asientos/viaje/${e.target.value}`)
             .then(res => res.json())
@@ -167,6 +168,7 @@ export default function BoletoForm() {
                                 fullWidth
                                 margin="normal"
                                 required
+                                disabled
                             />
                             <TextField
                                 label="Viaje"
@@ -179,9 +181,14 @@ export default function BoletoForm() {
                                 required
                             >
                                 {viaje.map((v) => (
-                                    <MenuItem key={v.cod} value={v.cod}>
-                                        {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
-                                    </MenuItem>
+                                    // <MenuItem key={v.cod} value={v.cod}>
+                                    //     {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
+                                    // </MenuItem>
+                                    v.status === true ? (
+                                        <MenuItem key={v.cod} value={v.cod}>
+                                            {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
+                                        </MenuItem>
+                                    ) : null
                                 ))}
                             </TextField>
                             <TextField

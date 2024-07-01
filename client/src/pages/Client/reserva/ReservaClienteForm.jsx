@@ -182,9 +182,14 @@ export default function ReservaClienteForm() {
                                 required
                             >
                                 {viaje.map((v) => (
-                                    <MenuItem key={v.cod} value={v.cod}>
-                                        {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
-                                    </MenuItem>
+                                    // <MenuItem key={v.cod} value={v.cod}>
+                                    //     {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
+                                    // </MenuItem>
+                                    v.status === true ? (
+                                        <MenuItem key={v.cod} value={v.cod}>
+                                            {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
+                                        </MenuItem>
+                                    ) : null
                                 ))}
                             </TextField>
                             {loadingAsientos ? <CircularProgress /> : (

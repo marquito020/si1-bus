@@ -32,7 +32,7 @@ const LoginCliente = () => {
             setLoading(false);
 
             if (data.accessToken) {
-                console.log('Data:', data);
+                /* console.log('Data:', data); */
                 dispatch(createUser(data));
                 navigate('/compras');
             } else if (data.error) {

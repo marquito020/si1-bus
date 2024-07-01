@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { URL_BACKEND } from "../../../constants/routes";
-import { useSelector } from "react-redux";
+/* import { useSelector } from "react-redux"; */
 import {
     PaymentElement,
     useStripe,
@@ -16,11 +16,11 @@ export default function BoletoClienteForm() {
     const elements = useElements();
     const navigate = useNavigate();
     const { cod } = useParams();
-    const user = useSelector((state) => state.user.id);
+    const user = JSON.parse(localStorage.getItem('user'));
     const [boleto, setBoleto] = useState({
         precio: "",
         cod_viaje: "",
-        id_cliente: user,
+        id_cliente: user.id,
         id_asiento: [],
         id_metodo_pago: "",
     });
@@ -269,9 +269,14 @@ export default function BoletoClienteForm() {
                                 required
                             >
                                 {viaje.map((v) => (
-                                    <MenuItem key={v.cod} value={v.cod}>
-                                        {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
-                                    </MenuItem>
+                                    // <MenuItem key={v.cod} value={v.cod}>
+                                    //     {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
+                                    // </MenuItem>
+                                    v.status === true ? (
+                                        <MenuItem key={v.cod} value={v.cod}>
+                                            {v.cod + " - " + "Fecha: " + v.fecha.substring(0, 10) + " - " + "Hora Salida: " + v.hora_salida + " - " + "Hora Llegada: " + v.hora_llegada + " - " + "Lugar Origen: " + v.lugar_origen + " - " + "Lugar Destino: " + v.lugar_destino}
+                                        </MenuItem>
+                                    ) : null
                                 ))}
                             </TextField>
                             <TextField
