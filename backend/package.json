@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "echo 'Building the project...' && yarn install",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "build": "babel src --out-dir dist"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -28,9 +28,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.7",
-    "@babel/core": "^7.24.7",
-    "@babel/preset-env": "^7.24.7",
     "nodemon": "^3.1.1"
   }
 }
