@@ -22,7 +22,7 @@ const getNotasVenta = async (req, res) => {
     JOIN public.cliente ON nota_venta.id_cliente = cliente.id_persona
     JOIN public.metodo_pago ON nota_venta.id_metodo_pago = metodo_pago.id
     JOIN public.persona ON cliente.id_persona = persona.id
-    ORDER BY nota_venta.id ASC`
+    ORDER BY nota_venta.id DESC`
     );
     res.json(result.rows);
   } catch (error) {

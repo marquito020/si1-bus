@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { PanelMenu } from "primereact/panelmenu";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { AppBar, Container, Toolbar, Typography, Button as MuiButton, Box, Avatar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { resetUser } from "../redux/states/user.state";
@@ -54,20 +54,24 @@ const DefaultLayout = () => {
       icon: <UserIcon />,
       items: [
         {
-          label: <Link to="/empleados" style={{ textDecoration: 'none', color: 'inherit' }}>Empleados</Link>,
-          icon: <UserIcon />
+          label: 'Empleados',
+          icon: <UserIcon />,
+          command: () => { window.location.href = '/empleados'; }
         },
         {
-          label: <Link to="/clientes" style={{ textDecoration: 'none', color: 'inherit' }}>Clientes</Link>,
-          icon: <UserIcon />
+          label: 'Clientes',
+          icon: <UserIcon />,
+          command: () => { window.location.href = '/clientes'; }
         },
         {
-          label: <Link to="/roles" style={{ textDecoration: 'none', color: 'inherit' }}>Roles</Link>,
-          icon: <RoleIcon />
+          label: 'Roles',
+          icon: <RoleIcon />,
+          command: () => { window.location.href = '/roles'; }
         },
         {
-          label: <Link to="/funcionalidades" style={{ textDecoration: 'none', color: 'inherit' }}>Funcionalidades</Link>,
-          icon: <FunctionIcon />
+          label: 'Funcionalidades',
+          icon: <FunctionIcon />,
+          command: () => { window.location.href = '/funcionalidades'; }
         },
       ],
     },
@@ -76,12 +80,14 @@ const DefaultLayout = () => {
       icon: <FlotaIcon />,
       items: [
         {
-          label: <Link to="/flotas" style={{ textDecoration: 'none', color: 'inherit' }}>Flotas</Link>,
-          icon: <FlotaIcon />
+          label: 'Flotas',
+          icon: <FlotaIcon />,
+          command: () => { window.location.href = '/flotas'; }
         },
         {
-          label: <Link to="/choferes" style={{ textDecoration: 'none', color: 'inherit' }}>Choferes</Link>,
-          icon: <DriverIcon />
+          label: 'Choferes',
+          icon: <DriverIcon />,
+          command: () => { window.location.href = '/choferes'; }
         },
       ],
     },
@@ -90,12 +96,14 @@ const DefaultLayout = () => {
       icon: <TravelIcon />,
       items: [
         {
-          label: <Link to="/viajes" style={{ textDecoration: 'none', color: 'inherit' }}>Viajes</Link>,
-          icon: <TravelIcon />
+          label: 'Viajes',
+          icon: <TravelIcon />,
+          command: () => { window.location.href = '/viajes'; }
         },
         {
-          label: <Link to="/lugares" style={{ textDecoration: 'none', color: 'inherit' }}>Lugares</Link>,
-          icon: <PlaceIcon />
+          label: 'Lugares',
+          icon: <PlaceIcon />,
+          command: () => { window.location.href = '/lugares'; }
         },
       ],
     },
@@ -104,16 +112,19 @@ const DefaultLayout = () => {
       icon: <TicketIcon />,
       items: [
         {
-          label: <Link to="/boletos" style={{ textDecoration: 'none', color: 'inherit' }}>Boletos</Link>,
-          icon: <TicketIcon />
+          label: 'Boletos',
+          icon: <TicketIcon />,
+          command: () => { window.location.href = '/boletos'; }
         },
         {
-          label: <Link to="/notas-venta" style={{ textDecoration: 'none', color: 'inherit' }}>Notas de Venta</Link>,
-          icon: <NoteIcon />
+          label: 'Notas de Venta',
+          icon: <NoteIcon />,
+          command: () => { window.location.href = '/notas-venta'; }
         },
         {
-          label: <Link to="/metodos-pago" style={{ textDecoration: 'none', color: 'inherit' }}>Métodos de Pago</Link>,
-          icon: <PaymentIcon />
+          label: 'Métodos de Pago',
+          icon: <PaymentIcon />,
+          command: () => { window.location.href = '/metodos-pago'; }
         },
       ],
     },
@@ -122,8 +133,9 @@ const DefaultLayout = () => {
       icon: <NoteIcon />,
       items: [
         {
-          label: <Link to="/bitacoras" style={{ textDecoration: 'none', color: 'inherit' }}>Bitácora</Link>,
-          icon: <NoteIcon />
+          label: 'Bitácora',
+          icon: <NoteIcon />,
+          command: () => { window.location.href = '/bitacoras'; }
         },
       ],
     }

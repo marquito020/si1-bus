@@ -52,7 +52,7 @@ export default function NotaVentaClienteList() {
                         color="primary"
                         size="small"
                         style={{ marginLeft: 16 }}
-                        onClick={() => navigate(`/notas-venta/${params.row.id}`)}
+                        onClick={() => navigate(`/nota-venta-cliente/${params.row.id}`)}
                     >
                         Detalles
                     </Button>
@@ -105,7 +105,7 @@ export default function NotaVentaClienteList() {
                             rowsPerPageOptions={[5]}
                             loading={loading}
                             disableSelectionOnClick
-                            onRowClick={(row) => navigate(`/notas-venta/${row.row.id}`)}
+                            onRowClick={(row) => navigate(`/nota-venta-cliente/${row.row.id}`)}
                         />
                     {/* </Box> */}
                     {error && (

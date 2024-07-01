@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { PanelMenu } from "primereact/panelmenu";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { AppBar, Container, Toolbar, Typography, Button as MuiButton, Box, Avatar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { resetUser } from "../redux/states/user.state";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import EventIcon from '@mui/icons-material/Event';
 
 const theme = createTheme({
   palette: {
@@ -41,21 +39,21 @@ const DefaultLayout = () => {
   };
 
   const items = [
-    // Compras
     {
-      label: <Link to="/compras" style={{ textDecoration: 'none', color: 'inherit' }}>Compras</Link>,
-      icon: <ShoppingCartIcon />
+      label: 'Compras',
+      icon: 'pi pi-fw pi-shopping-cart',
+      command: () => { window.location.href = '/compras'; }
     },
-    // Reservas
     {
-      label: <Link to="/reservas" style={{ textDecoration: 'none', color: 'inherit' }}>Reservas</Link>,
-      icon: <EventIcon />
+      label: 'Reservas',
+      icon: 'pi pi-fw pi-calendar',
+      command: () => { window.location.href = '/reservas'; }
     },
-    //Nota de Venta
     {
-      label: <Link to="/nota-venta-cliente" style={{ textDecoration: 'none', color: 'inherit' }}>Nota de Venta</Link>,
-      icon: <EventIcon />
-    },
+      label: 'Nota de Venta',
+      icon: 'pi pi-fw pi-file',
+      command: () => { window.location.href = '/nota-venta-cliente'; }
+    }
   ];
 
   return (
