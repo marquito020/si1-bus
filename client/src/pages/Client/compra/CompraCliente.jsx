@@ -44,7 +44,7 @@ export default function CompraCliente() {
         }
     }; */
 
-    useEffect(() => async () =>{
+    useEffect(() => {
         loadBoletas();
     }, []);
 
